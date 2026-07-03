@@ -55,7 +55,7 @@ $requiredSections = @(
   "## Walkthrough",
   "## Lab Steps",
   "## Azure Design Notes",
-  "## MVP Review",
+  "## Quality Review",
   "## Cleanup",
   "## Check Questions"
 )
@@ -134,3 +134,4 @@ if (-not $SkipTerraformInit) {
 }
 
 Write-Host "Course quality gates passed for $($lessons.Count) lessons."
+

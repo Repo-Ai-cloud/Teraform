@@ -1,6 +1,6 @@
-# MVP Lab Quality Standard
+# Lab Quality Standard
 
-This standard defines what "Microsoft MVP worthy" means for this course. A lab should teach Terraform clearly while modeling the professional Azure habits an MVP would be comfortable demonstrating in public.
+This standard defines what "community-ready" means for this course. A lab should teach Terraform clearly while modeling the professional Azure habits an experienced instructor would be comfortable demonstrating in public.
 
 ## Official Anchors
 
@@ -37,3 +37,4 @@ This standard defines what "Microsoft MVP worthy" means for this course. A lab s
 - Level 3, Azure-ready: design notes reflect Azure naming, tagging, security, and cost controls.
 - Level 4, Community-ready: a facilitator can present it live and answer the likely objections.
 - Level 5, Reference-worthy: the lab links to official guidance and includes an extension path.
+

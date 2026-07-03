@@ -26,9 +26,9 @@
 - Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
 - Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
 - Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- MVP presenter cue: explain why the lab uses this Azure pattern and what would change for production.
+- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
 
-## MVP Review
+## Quality Review
 - Show the expected plan shape before running `terraform apply`.
 - Identify one tradeoff and one failure mode a real team would discuss.
 - Confirm cleanup and post-lab verification before leaving the lesson.
@@ -43,5 +43,6 @@
     1. Which Terraform Associate objective does this lesson reinforce?
     2. Which values belong in variables, locals, and outputs in this example?
     3. What would you review in the plan before allowing this change into a shared Azure environment?
+
 
 

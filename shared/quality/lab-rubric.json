@@ -1,5 +1,5 @@
 {
-  "name": "Certified Terraform Associate Azure Edition MVP Lab Rubric",
+  "name": "Certified Terraform Associate Azure Edition Lab Rubric",
   "version": "1.0.0",
   "required_readme_sections": [
     "Objectives",
@@ -7,7 +7,7 @@
     "Walkthrough",
     "Lab Steps",
     "Azure Design Notes",
-    "MVP Review",
+    "Quality Review",
     "Cleanup",
     "Check Questions"
   ],
@@ -26,4 +26,5 @@
     "secret and state file scan"
   ]
 }
+
 

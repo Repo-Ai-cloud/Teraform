@@ -4,7 +4,7 @@ This repository is an original Azure-focused study course for Terraform Associat
 
 Official objective reference: https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004
 
-## Microsoft MVP Quality Bar
+## Course Quality Bar
 
 These labs are designed to be defensible in a Microsoft community, workshop, or customer-readiness setting. Each lab now includes:
 
@@ -16,7 +16,7 @@ These labs are designed to be defensible in a Microsoft community, workshop, or 
 
 Start with these course assets:
 
-- [MVP lab quality standard](docs/mvp-lab-quality-standard.md)
+- [Lab quality standard](docs/lab-quality-standard.md)
 - [Architecture review checklist](docs/architecture-review-checklist.md)
 - [Azure safety and cost guardrails](docs/azure-safety-cost-guardrails.md)
 - [Facilitator guide](docs/facilitator-guide.md)
@@ -81,4 +81,5 @@ Start with these course assets:
 - Labs that use the AzureRM provider include placeholder IDs so `terraform validate` can run consistently. Replace placeholders before applying.
 - Concept lessons use local Terraform constructs to keep feedback fast and avoid unnecessary cloud cost.
 - Apply labs only in a training subscription with budget alerts and permissions scoped for temporary resources.
+
 
