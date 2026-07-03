@@ -1,0 +1,5 @@
+project_prefix = "atfa"
+environment    = "dev"
+location       = "eastus"
+workload_name  = "status"
+address_space = "10.42.0.0/16"

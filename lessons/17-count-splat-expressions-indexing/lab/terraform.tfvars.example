@@ -1,0 +1,5 @@
+project_prefix = "atfa"
+environment    = "dev"
+location       = "eastus"
+workload_name  = "status"
+lab_slot_count = 3

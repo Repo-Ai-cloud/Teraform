@@ -1,0 +1,4 @@
+resource_group_name  = "replace-with-state-rg"
+storage_account_name = "replacewithstateaccount"
+container_name       = "tfstate"
+key                  = "azure-terraform-associate-40-labs/dev.tfstate"

@@ -1,0 +1,28 @@
+{
+  "name": "Azure Terraform Associate MVP Lab Rubric",
+  "version": "1.0.0",
+  "required_readme_sections": [
+    "Objectives",
+    "Scenario",
+    "Walkthrough",
+    "Lab Steps",
+    "Azure Design Notes",
+    "MVP Review",
+    "Cleanup",
+    "Check Questions"
+  ],
+  "well_architected_pillars": [
+    "Reliability",
+    "Security",
+    "Cost Optimization",
+    "Operational Excellence",
+    "Performance Efficiency"
+  ],
+  "required_quality_gates": [
+    "terraform fmt -check -recursive",
+    "terraform init -backend=false -input=false",
+    "terraform validate",
+    "forbidden marker scan",
+    "secret and state file scan"
+  ]
+}

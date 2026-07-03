@@ -1,0 +1,5 @@
+project_prefix = "atfa"
+environment    = "dev"
+location       = "eastus"
+workload_name  = "status"
+api_token       = "use-a-local-placeholder-only"

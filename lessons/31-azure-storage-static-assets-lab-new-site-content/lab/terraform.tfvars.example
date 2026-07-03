@@ -1,0 +1,6 @@
+project_prefix = "atfa"
+environment    = "dev"
+location       = "eastus"
+workload_name  = "status"
+subscription_id = "00000000-0000-0000-0000-000000000000"
+static_site_source_folder = "../site"
