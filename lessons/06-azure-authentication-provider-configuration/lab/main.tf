@@ -1,6 +1,6 @@
 locals {
   common_tags = {
-    course              = "azure-terraform-associate-40-labs"
+    course              = "certified-terraform-associate-azure-edition"
     managed_by          = "terraform"
     owner               = "platform-learning"
     cost_center         = "training"
@@ -21,6 +21,7 @@ resource "azurerm_resource_group" "main" {
     scenario = "A delivery team will run Terraform from both a d"
   })
 }
+
 
 
 

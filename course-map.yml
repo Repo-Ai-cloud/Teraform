@@ -1,4 +1,4 @@
-title: Azure Terraform Associate 40 Original Labs
+title: Certified Terraform Associate Azure Edition
 official_objectives: https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004
 terraform_required_version: '>= 1.12.0'
 lessons:
@@ -242,3 +242,4 @@ lessons:
     area: "Review"
     lab_kind: "capstone"
     outcome: "Tie the course together with a final scenario and practice questions."
+

@@ -1,4 +1,4 @@
-# Azure Terraform Associate: 40 Original Labs
+# Certified Terraform Associate: Azure Edition
 
 This repository is an original Azure-focused study course for Terraform Associate 004. It uses fresh scenarios, fresh naming, and new lab files. The course follows the public HashiCorp exam objectives and keeps provider-specific details practical without making Azure trivia the center of the exam preparation.
 
@@ -81,3 +81,4 @@ Start with these course assets:
 - Labs that use the AzureRM provider include placeholder IDs so `terraform validate` can run consistently. Replace placeholders before applying.
 - Concept lessons use local Terraform constructs to keep feedback fast and avoid unnecessary cloud cost.
 - Apply labs only in a training subscription with budget alerts and permissions scoped for temporary resources.
+

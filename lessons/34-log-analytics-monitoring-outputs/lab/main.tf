@@ -1,6 +1,6 @@
 locals {
   tags = {
-    course              = "azure-terraform-associate-40-labs"
+    course              = "certified-terraform-associate-azure-edition"
     managed_by          = "terraform"
     owner               = "platform-learning"
     cost_center         = "training"
@@ -28,6 +28,7 @@ resource "azurerm_log_analytics_workspace" "main" {
   daily_quota_gb      = 1
   tags                = local.tags
 }
+
 
 
 

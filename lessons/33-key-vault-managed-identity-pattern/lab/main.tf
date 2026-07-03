@@ -7,7 +7,7 @@ resource "random_string" "suffix" {
 locals {
   vault_name = substr(lower(replace("${var.project_prefix}-${var.environment}-${var.workload_name}-${random_string.suffix.result}", "-", "")), 0, 24)
   tags = {
-    course              = "azure-terraform-associate-40-labs"
+    course              = "certified-terraform-associate-azure-edition"
     managed_by          = "terraform"
     owner               = "platform-learning"
     cost_center         = "training"
@@ -50,6 +50,7 @@ resource "azurerm_key_vault" "main" {
     default_action = "Allow"
   }
 }
+
 
 
 

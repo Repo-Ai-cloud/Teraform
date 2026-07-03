@@ -7,7 +7,7 @@ resource "random_string" "suffix" {
 locals {
   base_name = substr(lower(replace("${var.project_prefix}-${var.environment}-${var.workload_name}", "-", "")), 0, 18)
   tags = {
-    course              = "azure-terraform-associate-40-labs"
+    course              = "certified-terraform-associate-azure-edition"
     managed_by          = "terraform"
     owner               = "platform-learning"
     cost_center         = "training"
@@ -63,6 +63,7 @@ resource "azurerm_linux_web_app" "main" {
     TRAINING_SCENARIO        = "event-check-in"
   }
 }
+
 
 
 

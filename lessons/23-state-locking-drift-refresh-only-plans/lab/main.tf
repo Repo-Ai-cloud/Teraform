@@ -4,7 +4,7 @@ locals {
   workload_name     = lower(replace(var.workload_name, " ", "-"))
 
   common_tags = {
-    course              = "azure-terraform-associate-40-labs"
+    course              = "certified-terraform-associate-azure-edition"
     managed_by          = "terraform"
     owner               = "platform-learning"
     cost_center         = "training"
@@ -30,6 +30,7 @@ resource "terraform_data" "lesson_contract" {
     tags          = local.common_tags
   }
 }
+
 
 
 

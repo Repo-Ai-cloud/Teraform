@@ -1,5 +1,5 @@
 {
-  "name": "Azure Terraform Associate MVP Lab Rubric",
+  "name": "Certified Terraform Associate Azure Edition MVP Lab Rubric",
   "version": "1.0.0",
   "required_readme_sections": [
     "Objectives",
@@ -26,3 +26,4 @@
     "secret and state file scan"
   ]
 }
+

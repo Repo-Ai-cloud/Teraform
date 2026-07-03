@@ -13,7 +13,7 @@ locals {
     js   = "application/javascript"
   }
   tags = {
-    course              = "azure-terraform-associate-40-labs"
+    course              = "certified-terraform-associate-azure-edition"
     managed_by          = "terraform"
     owner               = "platform-learning"
     cost_center         = "training"
@@ -62,6 +62,7 @@ resource "azurerm_storage_blob" "site_file" {
 
   depends_on = [azurerm_storage_account_static_website.site]
 }
+
 
 
 
