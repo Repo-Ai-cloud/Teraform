@@ -38,9 +38,18 @@ function Assert-NoMatches {
     [string]$Description
   )
 
-  $matches = rg -n -i --fixed-strings $Pattern $CourseRoot --glob "!**/Test-CourseQuality.ps1"
-  if ($LASTEXITCODE -eq 0) {
-    $matches | ForEach-Object { Write-Host $_ }
+  $files = Get-ChildItem -Path $CourseRoot -Recurse -File |
+    Where-Object {
+      $_.Name -ne "Test-CourseQuality.ps1" -and
+      $_.Name -ne ".terraform.lock.hcl" -and
+      $_.FullName -notmatch "[\\/](\.git|\.terraform)[\\/]"
+    }
+
+  $matches = $files | Select-String -Pattern $Pattern -SimpleMatch
+  if ($matches) {
+    $matches | ForEach-Object {
+      Write-Host "$($_.Path):$($_.LineNumber):$($_.Line)"
+    }
     throw "Found forbidden marker: $Description"
   }
 }

@@ -1,7 +1,5 @@
 # Certified Terraform Associate: Azure Edition
 
-![Terraform Labs Quality](https://github.com/Jamonygr/certified-terraform-associate-azure-edition/actions/workflows/terraform-labs.yml/badge.svg)
-
 An original Azure-focused study course for the HashiCorp Terraform Associate 004 exam. The repo teaches Terraform fundamentals through small, reviewable Azure scenarios, local-first exercises, lesson wikis, diagrams, and automated quality checks.
 
 Official objective reference: https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004
