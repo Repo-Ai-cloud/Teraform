@@ -53,6 +53,7 @@ $requiredSections = @(
   "## Objectives",
   "## Scenario",
   "## Walkthrough",
+  "## Wiki",
   "## Lab Steps",
   "## Azure Design Notes",
   "## Quality Review",
@@ -77,6 +78,22 @@ foreach ($lesson in $lessons) {
     if ($content -notmatch [regex]::Escape($section)) {
       throw "Missing section '$section' in $($lesson.Name)"
     }
+  }
+
+  if ($lesson.Name -notmatch "^(\d{2})-") {
+    throw "Lesson folder must start with a two-digit lesson number: $($lesson.Name)"
+  }
+
+  $lessonNumber = $Matches[1]
+  $expectedVisual = "assets/lesson-$lessonNumber-visual.svg"
+  $expectedVisualPath = Join-Path $lesson.FullName $expectedVisual
+
+  if (-not (Test-Path $expectedVisualPath)) {
+    throw "Missing lesson visual '$expectedVisual' in $($lesson.Name)"
+  }
+
+  if ($content -notmatch [regex]::Escape($expectedVisual)) {
+    throw "README does not reference lesson visual '$expectedVisual' in $($lesson.Name)"
   }
 }
 

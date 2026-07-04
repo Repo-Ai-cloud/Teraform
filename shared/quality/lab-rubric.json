@@ -5,11 +5,15 @@
     "Objectives",
     "Scenario",
     "Walkthrough",
+    "Wiki",
     "Lab Steps",
     "Azure Design Notes",
     "Quality Review",
     "Cleanup",
     "Check Questions"
+  ],
+  "required_lesson_assets": [
+    "assets/lesson-XX-visual.svg"
   ],
   "well_architected_pillars": [
     "Reliability",
@@ -22,6 +26,7 @@
     "terraform fmt -check -recursive",
     "terraform init -backend=false -input=false",
     "terraform validate",
+    "lesson wiki and visual asset scan",
     "forbidden marker scan",
     "secret and state file scan"
   ]

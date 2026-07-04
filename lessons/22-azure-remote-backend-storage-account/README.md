@@ -13,7 +13,21 @@
 
     The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
 
-    ## Lab Steps
+## Wiki
+![Lesson 22 visual](assets/lesson-22-visual.svg)
+
+**Concept snapshot:** Prepare an Azure Storage backend configuration without committing secrets.
+
+**Key terms:** `State`, `backend`, `plan review`, `cleanup`
+
+**Review cues:**
+- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
+- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
+- Use the visual to connect the lesson concept to Azure review habits.
+
+**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
+
+## Lab Steps
     1. Open the `lab/` folder and review the Terraform files.
     2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
     3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.

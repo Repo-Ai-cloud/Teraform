@@ -2,13 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Service Status</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Environment Readiness Board</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <h1>Service Status</h1>
-    <p>All training systems are ready for the next lab window.</p>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">Terraform Azure training</p>
+      <h1>Environment Readiness Board</h1>
+      <p>All lab systems are ready for the next training window.</p>
+    </header>
+
+    <section class="status-grid" aria-label="Environment readiness">
+      <article class="env-card dev">
+        <span>dev</span>
+        <strong>Sandbox ready</strong>
+        <p>Fast feedback for plan review and safe experiments.</p>
+      </article>
+      <article class="env-card test">
+        <span>test</span>
+        <strong>Validation ready</strong>
+        <p>Checks are prepared for repeatable lab verification.</p>
+      </article>
+      <article class="env-card stage">
+        <span>stage</span>
+        <strong>Review ready</strong>
+        <p>Changes can be inspected before shared use.</p>
+      </article>
+      <article class="env-card prod">
+        <span>prod</span>
+        <strong>Guarded</strong>
+        <p>Apply only with explicit approval and cleanup notes.</p>
+      </article>
+    </section>
+
+    <section class="notice">
+      <h2>Current Lab Window</h2>
+      <p>Run <code>terraform fmt</code>, <code>terraform validate</code>, and <code>terraform plan</code> before any intentional apply.</p>
+    </section>
   </main>
 </body>
 </html>

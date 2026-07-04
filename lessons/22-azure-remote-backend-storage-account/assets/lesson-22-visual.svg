@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
+  <title id="title">Lesson 22 visual: Azure Remote Backend with Storage Account</title>
+  <desc id="desc">A colorful Terraform lesson diagram showing the concept, workflow, and environment color legend.</desc>
+  <style>
+    .bg { fill: #f8fafc; }
+    .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+    .header { fill: #0f172a; }
+    .accent { fill: #14b8a6; }
+    .title { font: 700 30px Arial, sans-serif; fill: #0f172a; }
+    .label { font: 700 16px Arial, sans-serif; fill: #334155; letter-spacing: .5px; }
+    .body { font: 400 17px Arial, sans-serif; fill: #334155; }
+    .small { font: 700 14px Arial, sans-serif; fill: #ffffff; }
+    .chip { font: 700 14px Arial, sans-serif; fill: #0f172a; }
+    .arrow { fill: none; stroke: #64748b; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#64748b" />
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="540" />
+  <rect class="header" x="0" y="0" width="960" height="30" />
+  <rect class="accent" x="0" y="30" width="960" height="8" />
+  <text x="56" y="58" class="label">LESSON 22</text>
+  <text x="56" y="82" class="title">Azure Remote Backend with Storage Account</text>
+  <rect class="panel" x="56" y="148" width="848" height="94" rx="8" />
+  <text x="76" y="184" class="label">AREA</text>
+  <text x="76" y="214" class="body">State</text>
+  <text x="344" y="184" class="label">LAB TYPE</text>
+  <text x="344" y="214" class="body">backend</text>
+  <text x="612" y="184" class="label">REVIEW RHYTHM</text>
+  <text x="612" y="214" class="body">Plan, inspect, apply, clean up</text>
+  <rect class="panel" x="56" y="262" width="848" height="112" rx="8" />
+  <text x="76" y="302" class="label">OUTCOME</text>
+  <text x="76" y="326" class="body">Prepare an Azure Storage backend configuration without</text>
+  <text x="76" y="350" class="body">committing secrets.</text>
+  <rect x="74" y="404" width="150" height="58" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="111" y="440" class="chip">dev</text>
+  <path class="arrow" d="M238 433 H302" />
+  <rect x="318" y="404" width="150" height="58" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2" />
+  <text x="356" y="440" class="chip">test</text>
+  <path class="arrow" d="M482 433 H546" />
+  <rect x="562" y="404" width="150" height="58" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" />
+  <text x="599" y="440" class="chip">stage</text>
+  <path class="arrow" d="M726 433 H790" />
+  <rect x="806" y="404" width="80" height="58" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+  <text x="816" y="440" class="chip">prod</text>
+  <rect x="56" y="490" width="848" height="26" rx="6" fill="#0f172a" />
+  <text x="76" y="509" class="small">Use the color legend as a review cue: safer changes start in dev and earn their way toward production.</text>
+</svg>
