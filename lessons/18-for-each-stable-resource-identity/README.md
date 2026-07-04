@@ -15,6 +15,7 @@ The examples are deliberately small. They are designed to teach the Terraform co
 
 ## Wiki
 ![Lesson 18 visual](assets/lesson-18-visual.svg)
+![Lesson 18 diagram](assets/lesson-18-diagram.svg)
 
 **Concept snapshot:** Prefer for_each when each instance has an enduring key.
 
@@ -23,7 +24,7 @@ The examples are deliberately small. They are designed to teach the Terraform co
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
 - Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visual to connect the lesson concept to Azure review habits.
+- Use the visuals to connect the lesson concept to Azure review habits.
 
 **Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
 

@@ -15,6 +15,7 @@ The examples are deliberately small. They are designed to teach the Terraform co
 
 ## Wiki
 ![Lesson 01 visual](assets/lesson-01-visual.svg)
+![Lesson 01 diagram](assets/lesson-01-diagram.svg)
 
 **Concept snapshot:** Compare manual infrastructure work with repeatable Terraform workflows.
 
@@ -23,7 +24,7 @@ The examples are deliberately small. They are designed to teach the Terraform co
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
 - Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visual to connect the lesson concept to Azure review habits.
+- Use the visuals to connect the lesson concept to Azure review habits.
 
 **Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
 

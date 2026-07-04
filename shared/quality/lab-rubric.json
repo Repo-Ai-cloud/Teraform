@@ -13,7 +13,8 @@
     "Check Questions"
   ],
   "required_lesson_assets": [
-    "assets/lesson-XX-visual.svg"
+    "assets/lesson-XX-visual.svg",
+    "assets/lesson-XX-diagram.svg"
   ],
   "well_architected_pillars": [
     "Reliability",

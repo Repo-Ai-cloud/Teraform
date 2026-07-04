@@ -15,6 +15,7 @@ The examples are deliberately small. They are designed to teach the Terraform co
 
 ## Wiki
 ![Lesson 05 visual](assets/lesson-05-visual.svg)
+![Lesson 05 diagram](assets/lesson-05-diagram.svg)
 
 **Concept snapshot:** Pin provider versions and understand the lock file created by init.
 
@@ -23,7 +24,7 @@ The examples are deliberately small. They are designed to teach the Terraform co
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
 - Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visual to connect the lesson concept to Azure review habits.
+- Use the visuals to connect the lesson concept to Azure review habits.
 
 **Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
 

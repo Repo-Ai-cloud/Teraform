@@ -85,15 +85,21 @@ foreach ($lesson in $lessons) {
   }
 
   $lessonNumber = $Matches[1]
-  $expectedVisual = "assets/lesson-$lessonNumber-visual.svg"
-  $expectedVisualPath = Join-Path $lesson.FullName $expectedVisual
+  $expectedAssets = @(
+    "assets/lesson-$lessonNumber-visual.svg",
+    "assets/lesson-$lessonNumber-diagram.svg"
+  )
 
-  if (-not (Test-Path $expectedVisualPath)) {
-    throw "Missing lesson visual '$expectedVisual' in $($lesson.Name)"
-  }
+  foreach ($expectedAsset in $expectedAssets) {
+    $expectedAssetPath = Join-Path $lesson.FullName $expectedAsset
 
-  if ($content -notmatch [regex]::Escape($expectedVisual)) {
-    throw "README does not reference lesson visual '$expectedVisual' in $($lesson.Name)"
+    if (-not (Test-Path $expectedAssetPath)) {
+      throw "Missing lesson asset '$expectedAsset' in $($lesson.Name)"
+    }
+
+    if ($content -notmatch [regex]::Escape($expectedAsset)) {
+      throw "README does not reference lesson asset '$expectedAsset' in $($lesson.Name)"
+    }
   }
 }
 

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
+  <title id="title">Lesson 16 diagram: For Expressions and Collection Transformations</title>
+  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <style>
+    .bg { fill: #f8fafc; }
+    .band { fill: #0f172a; }
+    .teal { fill: #14b8a6; }
+    .node { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+    .node-a { stroke: #2563eb; }
+    .node-b { stroke: #d97706; }
+    .node-c { stroke: #7c3aed; }
+    .note { fill: #ecfeff; stroke: #0891b2; stroke-width: 2; }
+    .title { font: 700 27px Arial, sans-serif; fill: #0f172a; }
+    .meta { font: 700 14px Arial, sans-serif; fill: #475569; }
+    .label { font: 700 19px Arial, sans-serif; fill: #0f172a; }
+    .body { font: 400 16px Arial, sans-serif; fill: #334155; }
+    .small { font: 700 13px Arial, sans-serif; fill: #ffffff; }
+    .arrow { fill: none; stroke: #64748b; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#64748b" />
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="470" />
+  <rect class="band" width="960" height="24" />
+  <rect class="teal" y="24" width="960" height="8" />
+  <text x="54" y="72" class="meta">LESSON 16 DIAGRAM</text>
+  <text x="54" y="108" class="title">For Expressions and Collection Transformations</text>
+  <text x="54" y="136" class="meta">Area: Configuration   |   Lab type: collections</text>
+  <rect x="54" y="176" width="216" height="108" rx="8" class="node node-a" />
+  <text x="82" y="218" class="label">Input collection</text>
+  <path class="arrow" d="M290 230 H360" />
+  <rect x="382" y="176" width="216" height="108" rx="8" class="node node-b" />
+  <text x="410" y="218" class="label">Transform</text>
+  <text x="410" y="242" class="label">expression</text>
+  <path class="arrow" d="M618 230 H688" />
+  <rect x="710" y="176" width="196" height="108" rx="8" class="node node-c" />
+  <text x="738" y="218" class="label">Output structure</text>
+  <rect x="54" y="312" width="852" height="112" rx="8" class="note" />
+  <text x="72" y="336" class="meta">REVIEW NOTE</text>
+  <text x="72" y="352" class="body">Shape lists and maps into reviewable infrastructure data.</text>
+  <text x="72" y="394" class="body">Outcome: Transform maps and lists into deployable naming and tag structures.</text>
+  <rect x="54" y="438" width="852" height="24" rx="6" class="band" />
+  <text x="72" y="455" class="small">Read left to right: inputs and intent become Terraform behavior, then a reviewed Azure-ready outcome.</text>
+</svg>

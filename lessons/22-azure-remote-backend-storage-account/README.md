@@ -15,6 +15,7 @@
 
 ## Wiki
 ![Lesson 22 visual](assets/lesson-22-visual.svg)
+![Lesson 22 diagram](assets/lesson-22-diagram.svg)
 
 **Concept snapshot:** Prepare an Azure Storage backend configuration without committing secrets.
 
@@ -23,7 +24,7 @@
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
 - Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visual to connect the lesson concept to Azure review habits.
+- Use the visuals to connect the lesson concept to Azure review habits.
 
 **Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
 
