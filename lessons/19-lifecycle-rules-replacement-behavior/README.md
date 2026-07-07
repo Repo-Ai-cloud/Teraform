@@ -17,9 +17,9 @@ The examples are deliberately small. They are designed to teach the Terraform co
 ![Lesson 19 visual](assets/lesson-19-visual.svg)
 ![Lesson 19 diagram](assets/lesson-19-diagram.svg)
 
-**Concept snapshot:** Use lifecycle settings to control replacement, destruction, and ignored changes.
+**Concept snapshot:** Use lifecycle settings to control replacement, destruction, and ignored changes. The Azure resource group demonstrates `prevent_destroy` and `ignore_changes`; the local marker demonstrates `create_before_destroy` without forcing a cloud replacement.
 
-**Key terms:** `Configuration`, `lifecycle`, `plan review`, `cleanup`
+**Key terms:** `Configuration`, `lifecycle`, `create_before_destroy`, `prevent_destroy`, `ignore_changes`, `plan review`, `cleanup`
 
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
@@ -57,6 +57,7 @@ This lab validates locally and can be applied only after you review subscription
 1. Which Terraform Associate objective does this lesson reinforce?
 2. Which values belong in variables, locals, and outputs in this example?
 3. What would you review in the plan before allowing this change into a shared Azure environment?
+4. When would `create_before_destroy` reduce risk, and when could it fail because two objects cannot share the same name?
 
 
 

@@ -17,9 +17,9 @@ The examples are deliberately small. They are designed to teach the Terraform co
 ![Lesson 39 visual](assets/lesson-39-visual.svg)
 ![Lesson 39 diagram](assets/lesson-39-diagram.svg)
 
-**Concept snapshot:** Explain policy checks, drift detection, run tasks, and review gates.
+**Concept snapshot:** Explain HCP Terraform policy checks, drift detection, health assessments, run tasks, and review gates.
 
-**Key terms:** `HCP Terraform`, `governance`, `plan review`, `cleanup`
+**Key terms:** `HCP Terraform`, `governance`, `policy checks`, `drift detection`, `health assessments`, `run tasks`, `cleanup`
 
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
@@ -57,6 +57,7 @@ This lab is intentionally local-first so you can practice Terraform language beh
 1. Which Terraform Associate objective does this lesson reinforce?
 2. Which values belong in variables, locals, and outputs in this example?
 3. What would you review in the plan before allowing this change into a shared Azure environment?
+4. What evidence would a reviewer need before approving a policy override or drift remediation run?
 
 
 

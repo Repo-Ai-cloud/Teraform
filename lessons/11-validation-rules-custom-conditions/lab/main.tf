@@ -27,8 +27,26 @@ resource "terraform_data" "lesson_contract" {
     lesson_title    = "Validation Rules and Custom Conditions"
     tags            = local.common_tags
   }
+
+  lifecycle {
+    precondition {
+      condition     = length(setsubtract(var.allowed_regions, toset(local.supported_regions))) == 0
+      error_message = "Allowed regions must stay inside the supported training-region list."
+    }
+
+    postcondition {
+      condition     = self.output.approved_region == true
+      error_message = "The requested location must be included in allowed_regions."
+    }
+  }
 }
 
+check "requested_region_is_allowed" {
+  assert {
+    condition     = contains(var.allowed_regions, var.location)
+    error_message = "The requested Azure region is outside the approved training account list."
+  }
+}
 
 
 

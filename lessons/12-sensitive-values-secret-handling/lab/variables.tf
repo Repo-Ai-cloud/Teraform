@@ -38,3 +38,17 @@ variable "api_token" {
   sensitive   = true
   default     = "replace-with-lab-only-token"
 }
+
+variable "transient_session_token" {
+  description = "Example ephemeral value for provider authentication or write-only arguments. It is intentionally not stored in this lab's state-backed resources."
+  type        = string
+  sensitive   = true
+  ephemeral   = true
+  default     = null
+}
+
+variable "vault_secret_path" {
+  description = "Example Vault path that would identify where a real workflow retrieves a secret without committing it."
+  type        = string
+  default     = "kv/data/training/terraform-associate"
+}

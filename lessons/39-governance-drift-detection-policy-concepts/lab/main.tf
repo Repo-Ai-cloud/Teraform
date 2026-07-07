@@ -21,12 +21,15 @@ locals {
 resource "terraform_data" "lesson_contract" {
   input = {
     lesson_title = "Governance, Drift Detection, and Policy Concepts"
-    hcp_concepts = [
-      "remote runs",
-      "workspaces",
-      "variable sets",
-      "policy checks"
-    ]
+    governance_model = {
+      policy_checks = ["required tags", "allowed regions", "approved resource types"]
+      drift_detection = {
+        health_assessment = true
+        review_owner      = "platform-learning"
+      }
+      run_tasks = ["security scan", "cost estimate", "change evidence"]
+      approvals = ["speculative plan review", "policy override review", "manual apply gate"]
+    }
     tags = local.common_tags
   }
 }

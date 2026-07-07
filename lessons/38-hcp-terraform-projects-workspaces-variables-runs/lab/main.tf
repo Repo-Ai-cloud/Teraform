@@ -21,12 +21,23 @@ locals {
 resource "terraform_data" "lesson_contract" {
   input = {
     lesson_title = "HCP Terraform Projects, Workspaces, Variables, and Runs"
-    hcp_concepts = [
-      "remote runs",
-      "workspaces",
-      "variable sets",
-      "policy checks"
-    ]
+    hcp_project  = "${local.normalized_prefix}-${local.environment}-platform"
+    workspaces = {
+      network = {
+        purpose      = "shared Azure foundation"
+        execution    = "remote"
+        run_triggers = ["app"]
+      }
+      app = {
+        purpose      = "application deployment"
+        execution    = "remote"
+        run_triggers = []
+      }
+    }
+    variable_sets = {
+      azure_training_defaults = ["ARM_TENANT_ID", "ARM_SUBSCRIPTION_ID", "location"]
+      shared_tags             = ["owner", "cost_center", "data_classification"]
+    }
     tags = local.common_tags
   }
 }

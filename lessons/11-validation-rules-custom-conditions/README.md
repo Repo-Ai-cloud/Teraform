@@ -17,9 +17,9 @@ The examples are deliberately small. They are designed to teach the Terraform co
 ![Lesson 11 visual](assets/lesson-11-visual.svg)
 ![Lesson 11 diagram](assets/lesson-11-diagram.svg)
 
-**Concept snapshot:** Protect inputs with validation rules and simple custom checks.
+**Concept snapshot:** Protect inputs with validation rules, lifecycle custom conditions, and `check` blocks.
 
-**Key terms:** `Configuration`, `model validation`, `plan review`, `cleanup`
+**Key terms:** `Configuration`, `validation`, `precondition`, `postcondition`, `check`, `plan review`, `cleanup`
 
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
@@ -57,6 +57,7 @@ This lab is intentionally local-first so you can practice Terraform language beh
 1. Which Terraform Associate objective does this lesson reinforce?
 2. Which values belong in variables, locals, and outputs in this example?
 3. What would you review in the plan before allowing this change into a shared Azure environment?
+4. What is the difference between variable validation, a lifecycle precondition or postcondition, and a `check` block?
 
 
 

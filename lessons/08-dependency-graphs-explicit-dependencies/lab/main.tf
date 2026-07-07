@@ -22,6 +22,14 @@ resource "azurerm_resource_group" "main" {
   })
 }
 
+resource "terraform_data" "rollout_marker" {
+  input = {
+    marker_name = "${var.project_prefix}-${var.environment}-${var.workload_name}-08-ready"
+    review_note = "Publish deployment notes only after the resource group step completes."
+  }
+
+  depends_on = [azurerm_resource_group.main]
+}
 
 
 

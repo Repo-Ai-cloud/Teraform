@@ -28,6 +28,16 @@ resource "azurerm_resource_group" "main" {
 
 }
 
+resource "terraform_data" "replacement_marker" {
+  input = {
+    release_track = "${var.environment}-${var.workload_name}"
+    review_note   = "This local marker models replacement ordering without forcing an Azure resource replacement."
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
 
 

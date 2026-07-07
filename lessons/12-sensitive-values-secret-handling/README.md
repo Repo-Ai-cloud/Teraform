@@ -17,9 +17,9 @@ The examples are deliberately small. They are designed to teach the Terraform co
 ![Lesson 12 visual](assets/lesson-12-visual.svg)
 ![Lesson 12 diagram](assets/lesson-12-diagram.svg)
 
-**Concept snapshot:** Mark sensitive values and avoid placing secrets in source control.
+**Concept snapshot:** Mark sensitive values, keep secrets out of source control, and recognize where Vault, ephemeral values, and write-only provider arguments fit.
 
-**Key terms:** `Configuration`, `sensitive`, `plan review`, `cleanup`
+**Key terms:** `Configuration`, `sensitive`, `Vault`, `ephemeral`, `write-only`, `plan review`, `cleanup`
 
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
@@ -57,6 +57,7 @@ This lab is intentionally local-first so you can practice Terraform language beh
 1. Which Terraform Associate objective does this lesson reinforce?
 2. Which values belong in variables, locals, and outputs in this example?
 3. What would you review in the plan before allowing this change into a shared Azure environment?
+4. Why should ephemeral values and write-only arguments be used only where Terraform and the provider explicitly support them?
 
 
 

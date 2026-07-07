@@ -21,12 +21,17 @@ locals {
 resource "terraform_data" "lesson_contract" {
   input = {
     lesson_title = "HCP Terraform Workflow Overview"
-    hcp_concepts = [
-      "remote runs",
-      "workspaces",
-      "variable sets",
-      "policy checks"
-    ]
+    local_workflow = {
+      state_location = "local or configured backend"
+      run_location   = "operator workstation"
+      approval_gate  = "team process outside Terraform"
+    }
+    hcp_terraform_workflow = {
+      state_location = "HCP Terraform managed state"
+      run_location   = "remote operations"
+      run_stages     = ["plan", "policy checks", "approval", "apply"]
+      integration    = ["terraform login", "cloud block", "CLI-driven workflow", "VCS-driven workflow"]
+    }
     tags = local.common_tags
   }
 }

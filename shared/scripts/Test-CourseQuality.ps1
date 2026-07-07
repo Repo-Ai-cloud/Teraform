@@ -54,6 +54,19 @@ function Assert-NoMatches {
   }
 }
 
+function Assert-CourseContains {
+  param(
+    [object[]]$Files,
+    [string]$Pattern,
+    [string]$Description
+  )
+
+  $matches = $Files | Select-String -Pattern $Pattern -SimpleMatch
+  if (-not $matches) {
+    throw "Missing Terraform Associate 004 coverage marker: $Description"
+  }
+}
+
 $lessonRoot = Join-Path $CourseRoot "lessons"
 $lessons = Get-ChildItem -Path $lessonRoot -Directory | Sort-Object Name
 Assert-Equal -Name "lesson directory count" -Actual $lessons.Count -Expected 40
@@ -125,6 +138,38 @@ $forbiddenMarkers = @(
 
 foreach ($marker in $forbiddenMarkers) {
   Assert-NoMatches -Pattern $marker -Description $marker
+}
+
+$coverageFiles = @(
+  Get-ChildItem -Path (Join-Path $CourseRoot "lessons") -Recurse -File
+  Get-ChildItem -Path (Join-Path $CourseRoot "exam-review") -Recurse -File
+  Get-Item -Path (Join-Path $CourseRoot "README.md")
+  Get-Item -Path (Join-Path $CourseRoot "course-map.yml")
+)
+
+$coverageMarkers = @(
+  @{ Pattern = "Terraform Associate 004"; Description = "current exam version" },
+  @{ Pattern = "Terraform 1.12"; Description = "tested Terraform version" },
+  @{ Pattern = "depends_on"; Description = "explicit dependencies" },
+  @{ Pattern = "create_before_destroy"; Description = "replacement lifecycle rule" },
+  @{ Pattern = "precondition"; Description = "custom preconditions" },
+  @{ Pattern = "postcondition"; Description = "custom postconditions" },
+  @{ Pattern = "check"; Description = "configuration checks" },
+  @{ Pattern = "Vault"; Description = "secret manager awareness" },
+  @{ Pattern = "ephemeral"; Description = "ephemeral value awareness" },
+  @{ Pattern = "write-only"; Description = "write-only argument awareness" },
+  @{ Pattern = "HCP Terraform"; Description = "HCP Terraform coverage" },
+  @{ Pattern = "projects"; Description = "HCP Terraform projects" },
+  @{ Pattern = "workspaces"; Description = "HCP Terraform workspaces" },
+  @{ Pattern = "variable sets"; Description = "HCP Terraform variable sets" },
+  @{ Pattern = "run triggers"; Description = "HCP Terraform run triggers" },
+  @{ Pattern = "drift detection"; Description = "HCP Terraform drift detection" },
+  @{ Pattern = "policy checks"; Description = "HCP Terraform policy checks" },
+  @{ Pattern = "8d Configure and use HCP Terraform integration"; Description = "granular objective 8d mapping" }
+)
+
+foreach ($marker in $coverageMarkers) {
+  Assert-CourseContains -Files $coverageFiles -Pattern $marker.Pattern -Description $marker.Description
 }
 
 $forbiddenFiles = Get-ChildItem $CourseRoot -Recurse -Force -File |

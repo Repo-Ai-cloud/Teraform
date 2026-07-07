@@ -17,9 +17,9 @@ The examples are deliberately small. They are designed to teach the Terraform co
 ![Lesson 08 visual](assets/lesson-08-visual.svg)
 ![Lesson 08 diagram](assets/lesson-08-diagram.svg)
 
-**Concept snapshot:** Explain Terraform's dependency graph and when an explicit dependency is justified.
+**Concept snapshot:** Explain Terraform's dependency graph and when an explicit dependency is justified. The lab includes a local rollout marker with `depends_on` so learners can see a dependency that exists for workflow order, not because one argument directly references another resource.
 
-**Key terms:** `Configuration`, `resource group`, `plan review`, `cleanup`
+**Key terms:** `Configuration`, `depends_on`, `dependency graph`, `plan review`, `cleanup`
 
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
@@ -57,6 +57,7 @@ This lab validates locally and can be applied only after you review subscription
 1. Which Terraform Associate objective does this lesson reinforce?
 2. Which values belong in variables, locals, and outputs in this example?
 3. What would you review in the plan before allowing this change into a shared Azure environment?
+4. Why is `depends_on` useful only when Terraform cannot infer the ordering from normal references?
 
 
 

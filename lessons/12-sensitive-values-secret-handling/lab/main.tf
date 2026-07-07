@@ -23,7 +23,14 @@ resource "terraform_data" "lesson_contract" {
     lesson_title      = "Sensitive Values and Secret Handling"
     secret_is_present = length(var.api_token) > 0
     secret_preview    = sensitive(substr(var.api_token, 0, 0))
-    tags              = local.common_tags
+    vault_secret_path = var.vault_secret_path
+    secret_controls = [
+      "sensitive input variables",
+      "Vault or another secret manager",
+      "ephemeral values for transient credentials",
+      "write-only provider arguments when available"
+    ]
+    tags = local.common_tags
   }
 }
 

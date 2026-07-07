@@ -17,9 +17,9 @@ The examples are deliberately small. They are designed to teach the Terraform co
 ![Lesson 38 visual](assets/lesson-38-visual.svg)
 ![Lesson 38 diagram](assets/lesson-38-diagram.svg)
 
-**Concept snapshot:** Organize workspaces, variables, and run triggers for team delivery.
+**Concept snapshot:** Organize HCP Terraform projects, workspaces, variable sets, and run triggers for team delivery.
 
-**Key terms:** `HCP Terraform`, `hcp`, `plan review`, `cleanup`
+**Key terms:** `HCP Terraform`, `projects`, `workspaces`, `variable sets`, `run triggers`, `remote state`, `cleanup`
 
 **Review cues:**
 - Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
@@ -57,6 +57,7 @@ This lab is intentionally local-first so you can practice Terraform language beh
 1. Which Terraform Associate objective does this lesson reinforce?
 2. Which values belong in variables, locals, and outputs in this example?
 3. What would you review in the plan before allowing this change into a shared Azure environment?
+4. Which values belong in a workspace variable, which belong in a variable set, and which should stay in a secret store?
 
 
 
