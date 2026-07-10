@@ -1,62 +1,65 @@
 # Lesson 33: Key Vault and Managed Identity Pattern
 
-## Objectives
-- Create a Key Vault pattern that uses managed identity and RBAC-friendly settings.
-- Connect the lesson to Terraform Associate 004 objective area: Azure.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+This lesson demonstrates an Azure security pattern; Lesson 12 remains the primary sensitive-data and HashiCorp Vault evidence.
+
+## Certification alignment
+
+- `2c` — Write Terraform configuration using multiple providers — **hands-on**: AzureRM and Random create a Key Vault and user-assigned identity, while the guided comparison keeps Microsoft Azure Key Vault distinct from HashiCorp Vault in objective 4h.
+- `4h` — Understand best practices for managing sensitive data, including secrets management with Vault — **guided**: AzureRM and Random create a Key Vault and user-assigned identity, while the guided comparison keeps Microsoft Azure Key Vault distinct from HashiCorp Vault in objective 4h.
 
 ## Scenario
-A secure internal dashboard stores configuration secrets outside application code.
+
+A secure internal dashboard needs an identity and secret store without embedding application credentials.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Trace the random suffix into globally constrained names and review the managed identity and Key Vault RBAC settings.
+2. Confirm that no secret value or client secret is created by the active lab.
+3. Plan the resource group, identity, and vault, then inspect the URI and client-ID outputs.
+4. Compare this Azure service pattern with Lesson 12's HashiCorp Vault provider example and state which product the official objective names.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- The plan creates a Key Vault configured for RBAC authorization and a user-assigned managed identity.
+- Outputs expose identifiers needed for later role assignment without outputting a secret.
+- No HashiCorp Vault server, Vault provider, or secret value is implied by the Azure resource type.
+
+## Failure modes
+
+- Confusing Azure Key Vault with HashiCorp Vault produces inaccurate exam terminology.
+- A managed identity has no access until an appropriate data-plane role assignment is added.
+- Soft-delete and purge-protection settings can affect teardown timing and name reuse.
 
 ## Wiki
+
 ![Lesson 33 visual](assets/lesson-33-visual.svg)
 ![Lesson 33 diagram](assets/lesson-33-diagram.svg)
 
-**Concept snapshot:** Create a Key Vault pattern that uses managed identity and RBAC-friendly settings.
-
-**Key terms:** `Azure`, `key vault`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, destroy all consumers and role assignments before destroying the identity, vault, and resource group.
+- Verify the vault lifecycle outcome required by the subscription policy and remove copied inputs afterward.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which official product does objective 4h name?
+2. Why does creating an identity not automatically grant vault access?
+3. Which outputs are identifiers rather than secrets?
 

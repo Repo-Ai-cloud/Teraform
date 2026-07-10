@@ -1,62 +1,65 @@
 # Lesson 18: for_each with Stable Resource Identity
 
-## Objectives
-- Prefer for_each when each instance has an enduring key.
-- Connect the lesson to Terraform Associate 004 objective area: Configuration.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Stable keys are part of resource identity and should be chosen as carefully as Azure names.
+
+## Certification alignment
+
+- `4d` — Understand and use complex types — **hands-on**: for_each keys Azure resource-group instances by durable region names and exposes keyed outputs.
+- `4e` — Write dynamic configuration using expressions and functions — **hands-on**: for_each keys Azure resource-group instances by durable region names and exposes keyed outputs.
 
 ## Scenario
+
 Regional landing zones are tracked by name so adding one does not rename the others.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Inspect the map used by for_each and predict each resource address.
+2. Plan the baseline, then add one region key in a disposable override and verify existing addresses stay unchanged.
+3. Remove a nonfinal key and compare the focused plan with the index-shift behavior from Lesson 17.
+4. Reference one instance by key and inspect the map-shaped output.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- Resource addresses contain stable string keys such as the region name.
+- Adding one map element proposes one new resource group without renaming existing instances.
+- Outputs preserve the key-to-resource relationship.
+
+## Failure modes
+
+- Changing a map key is a remove-and-add identity change, not an in-place rename.
+- Converting an unordered set of complex objects for for_each is invalid because keys are unclear.
+- Duplicate or policy-invalid Azure names can still make provider operations fail.
 
 ## Wiki
+
 ![Lesson 18 visual](assets/lesson-18-visual.svg)
 ![Lesson 18 diagram](assets/lesson-18-diagram.svg)
 
-**Concept snapshot:** Prefer for_each when each instance has an enduring key.
-
-**Key terms:** `Configuration`, `foreach rg`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, destroy all keyed resource groups from the same state and verify each is gone.
+- Delete local overrides only after destroy; retain the provider lock.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What makes a key durable enough for for_each?
+2. Why is renaming a key usually destructive?
+3. How does the output type differ from a count splat?
 

@@ -22,11 +22,13 @@ resource "terraform_data" "lesson_contract" {
   input = {
     lesson_title = "Debugging, Logs, CLI Config, and Provider Cache"
     debug_steps = [
-      "Set TF_LOG only for focused troubleshooting.",
-      "Use a plugin cache for repeated CI runs.",
-      "Remove local logs before sharing support bundles."
+      "Set TF_LOG and TF_LOG_PATH only for focused troubleshooting.",
+      "Set plugin_cache_dir in a CLI configuration file for repeated provider installation.",
+      "Review and redact logs before sharing them.",
+      "Unset logging variables and remove local logs immediately after troubleshooting."
     ]
-    tags = local.common_tags
+    safe_demo = "../exercise/Invoke-DebugDemo.ps1 uses only a disposable OS temp directory."
+    tags      = local.common_tags
   }
 }
 

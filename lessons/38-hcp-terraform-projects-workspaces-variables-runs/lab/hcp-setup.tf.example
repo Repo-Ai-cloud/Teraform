@@ -1,0 +1,93 @@
+# Optional setup configuration. Run it from a separate disposable directory
+# after `terraform login app.terraform.io`. The TFE provider reads the CLI
+# credential; no API token belongs in source or tfvars.
+terraform {
+  required_version = ">= 1.12.0, < 2.0.0"
+
+  required_providers {
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "~> 0.78"
+    }
+  }
+}
+
+variable "hcp_organization" {
+  type        = string
+  description = "Existing HCP Terraform organization name."
+}
+
+provider "tfe" {
+  hostname     = "app.terraform.io"
+  organization = var.hcp_organization
+}
+
+resource "tfe_project" "training" {
+  name         = "terraform-associate-training"
+  organization = var.hcp_organization
+  description  = "Disposable project for the Terraform Associate HCP workflow."
+}
+
+resource "tfe_workspace" "app" {
+  name         = "atfa-lesson-38-app"
+  organization = var.hcp_organization
+  project_id   = tfe_project.training.id
+  force_delete = false
+}
+
+resource "tfe_workspace" "network" {
+  name                      = "atfa-lesson-38-network"
+  organization              = var.hcp_organization
+  project_id                = tfe_project.training.id
+  force_delete              = false
+  global_remote_state       = false
+  remote_state_consumer_ids = [tfe_workspace.app.id]
+}
+
+resource "tfe_workspace_settings" "network" {
+  workspace_id   = tfe_workspace.network.id
+  execution_mode = "remote"
+  auto_apply     = false
+}
+
+resource "tfe_workspace_settings" "app" {
+  workspace_id   = tfe_workspace.app.id
+  execution_mode = "remote"
+  auto_apply     = false
+}
+
+# A non-global variable set is attached only to this training project. It
+# contains no credentials or sensitive values.
+resource "tfe_variable_set" "training_defaults" {
+  name         = "Azure training defaults"
+  description  = "Non-secret defaults shared by the lesson 38 workspaces."
+  organization = var.hcp_organization
+  global       = false
+}
+
+resource "tfe_project_variable_set" "training_defaults" {
+  project_id      = tfe_project.training.id
+  variable_set_id = tfe_variable_set.training_defaults.id
+}
+
+resource "tfe_variable" "location" {
+  key             = "location"
+  value           = "eastus"
+  category        = "terraform"
+  description     = "Non-sensitive Azure region used by both training workspaces."
+  sensitive       = false
+  variable_set_id = tfe_variable_set.training_defaults.id
+}
+
+# A successful network apply queues an app run. It does not auto-apply it.
+resource "tfe_run_trigger" "network_to_app" {
+  workspace_id  = tfe_workspace.app.id
+  sourceable_id = tfe_workspace.network.id
+}
+
+output "workspace_names" {
+  value = {
+    network = tfe_workspace.network.name
+    app     = tfe_workspace.app.name
+  }
+}

@@ -1,0 +1,36 @@
+# HashiCorp Vault is a separate secrets-management product. This optional
+# example retrieves a KV v2 secret ephemerally, so the result is not stored in
+# Terraform state. Rename this file to *.tf only in a disposable working copy.
+terraform {
+  required_providers {
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 5.0"
+    }
+  }
+}
+
+variable "hashicorp_vault_address" {
+  type        = string
+  description = "HTTPS address of a non-production HashiCorp Vault server."
+}
+
+variable "hashicorp_vault_token" {
+  type        = string
+  description = "Short-lived Vault token supplied at runtime, never in a tfvars file."
+  sensitive   = true
+  ephemeral   = true
+}
+
+provider "vault" {
+  address = var.hashicorp_vault_address
+  token   = var.hashicorp_vault_token
+}
+
+ephemeral "vault_kv_secret_v2" "runtime" {
+  mount = "kv"
+  name  = "training/terraform-associate"
+}
+
+# Only pass ephemeral.vault_kv_secret_v2.runtime.data values into another
+# ephemeral context, provider configuration, or a provider write-only argument.

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 27 diagram: Module Composition for Networking</title>
-  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <desc id="desc">Process diagram for Lesson 27 diagram: Module Composition for Networking, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

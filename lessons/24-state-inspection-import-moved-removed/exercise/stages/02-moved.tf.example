@@ -1,0 +1,23 @@
+terraform {
+  required_version = ">= 1.12.0, < 2.0.0"
+
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.9"
+    }
+  }
+}
+
+resource "random_id" "service" {
+  byte_length = 4
+}
+
+moved {
+  from = random_id.legacy
+  to   = random_id.service
+}
+
+output "identifier" {
+  value = random_id.service.b64_url
+}

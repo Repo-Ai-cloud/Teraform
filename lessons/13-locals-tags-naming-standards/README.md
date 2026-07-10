@@ -1,62 +1,64 @@
 # Lesson 13: Locals, Tags, and Naming Standards
 
-## Objectives
-- Centralize naming and tagging decisions with locals.
-- Connect the lesson to Terraform Associate 004 objective area: Configuration.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Locals improve internal readability but are not inputs visible to module callers.
+
+## Certification alignment
+
+- `4e` — Write dynamic configuration using expressions and functions — **hands-on**: Locals combine input variables, naming expressions, and a canonical tag map before those values reach the managed resource group.
 
 ## Scenario
+
 A cost review team asks every Azure resource to carry consistent ownership tags.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Trace each input into the locals that normalize the resource name and common tags.
+2. Change one ownership value in a disposable tfvars file and review the exact tag diff.
+3. Identify which expressions are pure transformations and which values come from a provider-managed resource.
+4. Plan the resource group and verify every required tag is present.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- The computed name is consistent with the declared environment and workload.
+- The plan shows a single reusable tag map rather than repeated literal values.
+- Changing a local input produces a focused, reviewable diff.
+
+## Failure modes
+
+- Duplicating tags in every resource invites inconsistent spelling and ownership data.
+- Putting a changing property into a resource name can force unnecessary replacement.
+- An Azure Policy may add or reject tags, causing drift or apply failure that the plan must reveal.
 
 ## Wiki
+
 ![Lesson 13 visual](assets/lesson-13-visual.svg)
 ![Lesson 13 diagram](assets/lesson-13-diagram.svg)
 
-**Concept snapshot:** Centralize naming and tagging decisions with locals.
-
-**Key terms:** `Configuration`, `resource group`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, destroy the resource group and verify it is gone.
+- Delete the copied variable file only after destroy; preserve the root lock.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which values deserve a local rather than a new input variable?
+2. How does centralizing tags improve review?
+3. Which naming change could force replacement?
 

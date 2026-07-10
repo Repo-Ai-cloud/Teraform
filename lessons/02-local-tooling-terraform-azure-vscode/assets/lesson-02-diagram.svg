@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 02 diagram: Local Tooling: Terraform CLI, Azure CLI, VS Code</title>
-  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <desc id="desc">A left-to-right toolchain flow connects the local tooling concept to a review habit and an Azure operating pattern, emphasizing the minimum workstation setup needed for the course labs.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

@@ -1,63 +1,61 @@
 # Lesson 35: Provisioners, Alternatives, and Safe Use Cases
 
-    ## Objectives
-    - Recognize provisioner tradeoffs and safer Terraform-native alternatives.
-    - Connect the lesson to Terraform Associate 004 objective area: Maintenance.
-    - Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Provisioners remain a last resort; this lesson teaches the decision, not a copy-paste shell recipe.
 
-    ## Scenario
-    A team replaces ad hoc shell customization with image, extension, or platform features.
+## Certification alignment
 
-    ## Walkthrough
-    Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
+- `2b` — Describe how Terraform uses providers — **hands-on**: The Local provider writes a runbook as a managed local_file while terraform_data records the provisioner decision, demonstrating an apply and a safer provider-native alternative.
+- `3e` — Apply changes to infrastructure with Terraform — **hands-on**: The Local provider writes a runbook as a managed local_file while terraform_data records the provisioner decision, demonstrating an apply and a safer provider-native alternative.
 
-    The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+## Scenario
+
+A release process needs a generated local runbook, and the team must decide whether any imperative provisioner is justified.
+
+## Walkthrough
+
+1. Inspect local_file.runbook and explain why a provider-managed resource is preferable to a local-exec command for this artifact.
+2. Review terraform_data.provisioner_decision and list the failure, retry, idempotence, and credential questions that must be answered before using a provisioner.
+3. Plan and optionally apply the local file, edit it out of band, and observe Terraform's corrective plan.
+4. Describe cloud-init, image building, configuration management, or application deployment alternatives for a remote bootstrap need.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- The plan proposes a managed local file with deterministic content and a recorded decision output.
+- After apply, Terraform tracks the file and detects an external content edit.
+- No shell provisioner is required for the active exercise.
+
+## Failure modes
+
+- A provisioner can partially complete outside Terraform's resource model and be hard to retry safely.
+- Commands that depend on workstation tools or credentials make runs nonportable.
+- Destroying local state before removing the managed file can leave an untracked artifact.
 
 ## Wiki
+
 ![Lesson 35 visual](assets/lesson-35-visual.svg)
 ![Lesson 35 diagram](assets/lesson-35-diagram.svg)
 
-**Concept snapshot:** Recognize provisioner tradeoffs and safer Terraform-native alternatives.
-
-**Key terms:** `Maintenance`, `provisioner`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-    1. Open the `lab/` folder and review the Terraform files.
-    2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-    3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-    4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-    This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-    - If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-    - Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-    - Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
-- Delete `lab/generated-runbook.txt` if you apply the local-file example.
 
-    ## Check Questions
-    1. Which Terraform Associate objective does this lesson reinforce?
-    2. Which values belong in variables, locals, and outputs in this example?
-    3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, run terraform destroy and verify the generated runbook file is removed before deleting local state.
+- Remove only generated runbook output; keep tracked configuration and the Local provider lock.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Why is local_file more observable than local-exec for this case?
+2. What failure semantics would an imperative command need?
+3. Which external build or configuration tool better owns a remote bootstrap?
 

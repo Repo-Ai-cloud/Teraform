@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 17 diagram: count, Splat Expressions, and Indexing</title>
-  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <desc id="desc">A count value expands into indexed resource instances, and a splat expression gathers their attributes into an output, exposing both repetition and positional identity.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

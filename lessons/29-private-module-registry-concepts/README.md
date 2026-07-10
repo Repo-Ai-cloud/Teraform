@@ -1,62 +1,63 @@
 # Lesson 29: Private Module Registry Concepts
 
-## Objectives
-- Describe private registry naming, publishing, and consumption patterns.
-- Connect the lesson to Terraform Associate 004 objective area: Modules.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Private registry use and paid governance features are guided because they require organization-specific external services.
+
+## Certification alignment
+
+- `5a` — Explain how Terraform sources modules — **guided**: The guided private-registry example covers authenticated module discovery, version publishing, and consumption; the active local lab remains account-free.
+- `5d` — Manage module versions — **guided**: The guided private-registry example covers authenticated module discovery, version publishing, and consumption; the active local lab remains account-free.
+- `8b` — Describe HCP Terraform collaboration and governance features — **conceptual**: The guided private-registry example covers authenticated module discovery, version publishing, and consumption; the active local lab remains account-free.
 
 ## Scenario
-An organization wants shared golden modules for app teams without copy-paste drift.
+
+An organization wants shared golden modules for application teams without copy-paste drift.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Run the local baseline to validate the account-free lesson contract.
+2. Inspect `lab/private-module-call.tf.example` and identify the hostname, organization, namespace, name, and provider segments in its private module source.
+3. Optionally, with an authorized HCP Terraform account and a published private module, authenticate and initialize the example in a disposable copy.
+4. Compare private-registry discovery, version governance, and access control with the public registry module from Lesson 28.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform validate
+terraform plan
+```
+
+The local validation path requires no HCP account. Any HCP Terraform procedure below is **optional**, uses an external account, and must be cleaned up in that account when complete.
+
+## Expected results
+
+- Local validation succeeds without contacting a private registry.
+- An optional authorized init resolves only module versions the account can access.
+- The review identifies publishing and consumption as separate workflows.
+
+## Failure modes
+
+- A private registry returns authorization or not-found errors when the token lacks access.
+- An unpublished or mistyped version prevents init from resolving the module.
+- Treating registry availability as proof of security skips code, provenance, interface, and plan review.
 
 ## Wiki
+
 ![Lesson 29 visual](assets/lesson-29-visual.svg)
 ![Lesson 29 diagram](assets/lesson-29-diagram.svg)
 
-**Concept snapshot:** Describe private registry naming, publishing, and consumption patterns.
-
-**Key terms:** `Modules`, `model`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Destroy any local contract applied in the account-free lab.
+- For optional HCP work, remove the disposable consumer, revoke unneeded tokens, and leave shared module versions untouched unless you own them.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which segments make a private module source address unambiguous?
+2. Who should be allowed to publish a new version?
+3. What review remains necessary after access succeeds?
 

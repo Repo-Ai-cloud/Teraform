@@ -1,62 +1,61 @@
 # Lesson 28: Registry Modules and Version Pinning
 
-## Objectives
-- Read registry module sources and pin versions before use.
-- Connect the lesson to Terraform Associate 004 objective area: Modules.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Lesson 28 is the primary hands-on source and version evidence; no Azure account is required.
+
+## Certification alignment
+
+- `5a` — Explain how Terraform sources modules — **hands-on**: The active `hashicorp/subnets/cidr` module is pinned to `1.0.0` and produces three CIDRs; the AVM virtual-network example remains review-only with `version = "~> 0.19"`.
+- `5d` — Manage module versions — **hands-on**: The active `hashicorp/subnets/cidr` module is pinned to `1.0.0` and produces three CIDRs; the AVM virtual-network example remains review-only with `version = "~> 0.19"`.
 
 ## Scenario
-A team evaluates a community module but records an internal review before adoption.
+
+A team evaluates a public registry module and records an Azure module review before adoption.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Inspect the active registry source and exact version, then run init and terraform providers to see the installed module tree.
+2. Run the credential-free test and plan; verify the module returns three nonoverlapping CIDRs.
+3. Review `avm-virtual-network.tf.example` without enabling it, including its source, `~> 0.19` version policy, `parent_id`, provider requirements, inputs, outputs, and planned Azure scope.
+4. In a disposable copy only, adjust the active module constraint, run init -upgrade, and review source and behavior before adopting any change.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- Initialization downloads hashicorp/subnets/cidr 1.0.0 and the plan exposes three derived networks.
+- The test proves the expected output count without Azure credentials.
+- The AVM example documents the current 0.19-compatible interface but creates no Azure resources in this lab.
+
+## Failure modes
+
+- A registry source typo or unavailable version makes init fail.
+- Floating constraints can adopt breaking module behavior without review.
+- Uncommenting the AVM example without Azure context, parent_id, and review changes a no-cost lab into a cloud deployment.
 
 ## Wiki
+
 ![Lesson 28 visual](assets/lesson-28-visual.svg)
 ![Lesson 28 diagram](assets/lesson-28-diagram.svg)
 
-**Concept snapshot:** Read registry module sources and pin versions before use.
-
-**Key terms:** `Modules`, `registry`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Destroy the local active-module state if anything was applied.
+- Delete the disposable upgrade copy and generated module cache; keep the root lock and the tracked review-only AVM example.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What does the module version argument control that the provider lock does not?
+2. Which evidence establishes module provenance and interface compatibility?
+3. Why is the AVM example review-only while the CIDR module is active?
 

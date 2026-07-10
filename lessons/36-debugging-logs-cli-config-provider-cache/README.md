@@ -1,62 +1,61 @@
 # Lesson 36: Debugging, Logs, CLI Config, and Provider Cache
 
-## Objectives
-- Use Terraform logs, CLI configuration, and provider caching during troubleshooting.
-- Connect the lesson to Terraform Associate 004 objective area: Maintenance.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Verbose logging is temporary diagnostic evidence, not a normal CI artifact.
+
+## Certification alignment
+
+- `2a` — Install and version Terraform providers — **guided**: Invoke-DebugDemo.ps1 exercises TF_LOG, TF_LOG_PATH, TF_CLI_CONFIG_FILE, and plugin_cache_dir in a disposable directory, redacts likely secrets, and cleans every artifact in finally.
+- `7c` — Describe when and how to use verbose logging — **hands-on**: Invoke-DebugDemo.ps1 exercises TF_LOG, TF_LOG_PATH, TF_CLI_CONFIG_FILE, and plugin_cache_dir in a disposable directory, redacts likely secrets, and cleans every artifact in finally.
 
 ## Scenario
-A CI job has slow provider installs and the team needs a repeatable debug procedure.
+
+A CI job has slow provider installs and the team needs a focused, safe debug procedure.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Review exercise/Invoke-DebugDemo.ps1 and identify every process environment variable it saves and restores.
+2. Run ./exercise/Invoke-DebugDemo.ps1 at DEBUG; use TRACE only when the narrower log is insufficient.
+3. Inspect the temporary CLI configuration and plugin cache behavior, then review only the script's redacted diagnostic excerpt.
+4. Confirm the script deletes its log, cache, CLI config, and temporary root even when a Terraform command fails.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- The diagnostic run creates a scoped log through TF_LOG_PATH and uses a temporary plugin cache.
+- Likely secret patterns are redacted before any excerpt is displayed.
+- The process environment and filesystem are restored by the finally block.
+
+## Failure modes
+
+- TRACE can expose provider requests, responses, paths, and sensitive values.
+- A nonexistent or unwritable plugin_cache_dir makes initialization warn or fail to cache.
+- Leaving TF_CLI_CONFIG_FILE set can silently change later Terraform runs.
 
 ## Wiki
+
 ![Lesson 36 visual](assets/lesson-36-visual.svg)
 ![Lesson 36 diagram](assets/lesson-36-diagram.svg)
 
-**Concept snapshot:** Use Terraform logs, CLI configuration, and provider caching during troubleshooting.
-
-**Key terms:** `Maintenance`, `debug`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Let the script finish so finally restores prior environment variables and removes the temporary directory.
+- If interrupted, clear TF_LOG, TF_LOG_PATH, and TF_CLI_CONFIG_FILE and delete the identified temporary debug root manually.
+- Never commit or share a raw Terraform log; keep the root dependency lock.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which log level is the narrowest one that captures the problem?
+2. Why must TF_LOG_PATH output be treated as sensitive?
+3. How does plugin_cache_dir improve speed without replacing the lock file?
 

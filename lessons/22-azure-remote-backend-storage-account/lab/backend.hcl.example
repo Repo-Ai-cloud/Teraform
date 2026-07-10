@@ -1,5 +1,0 @@
-resource_group_name  = "replace-with-state-rg"
-storage_account_name = "replacewithstateaccount"
-container_name       = "tfstate"
-key                  = "certified-terraform-associate-azure-edition/dev.tfstate"
-

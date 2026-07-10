@@ -1,62 +1,63 @@
 # Lesson 23: State Locking, Drift, and Refresh-Only Plans
 
-## Objectives
-- Explain locking, drift, refresh-only plans, and when to review state carefully.
-- Connect the lesson to Terraform Associate 004 objective area: State.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+All drift and contention work is local and disposable; no Azure login is required.
+
+## Certification alignment
+
+- `2d` — Explain how Terraform uses and manages state — **hands-on**: The local_file target and disposable Invoke-DriftAndLockDemo.ps1 exercise perform drift detection, refresh-only planning, and real lock contention without touching tracked fixtures.
+- `6a` — Describe the local backend — **hands-on**: The local_file target and disposable Invoke-DriftAndLockDemo.ps1 exercise perform drift detection, refresh-only planning, and real lock contention without touching tracked fixtures.
+- `6b` — Describe state locking — **hands-on**: The local_file target and disposable Invoke-DriftAndLockDemo.ps1 exercise perform drift detection, refresh-only planning, and real lock contention without touching tracked fixtures.
+- `6d` — Manage resource drift and Terraform state — **hands-on**: The local_file target and disposable Invoke-DriftAndLockDemo.ps1 exercise perform drift detection, refresh-only planning, and real lock contention without touching tracked fixtures.
 
 ## Scenario
-A dashboard tag was changed in the portal and the team wants to inspect drift before changing anything.
+
+A dashboard-owned file was changed outside Terraform and the team must review drift while another operation may hold the state lock.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Review the local_file resource and predict what a normal plan would do after an out-of-band edit.
+2. From the lesson root, run ./exercise/Invoke-DriftAndLockDemo.ps1; the script copies the lab to a unique temporary directory.
+3. Observe the external file mutation, the refresh-only plan, and the competing operation blocked by the held lock.
+4. Compare a normal corrective plan with refresh-only mode and record which one would change the file versus only state and outputs.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- The script applies a local file, mutates it outside Terraform, and shows the drift in a refresh-only plan.
+- A concurrent writer receives a lock error while the lock-holder process is active.
+- The script's finally block removes the unique temporary directory and leaves the tracked lab unchanged.
+
+## Failure modes
+
+- Force-unlocking an active operation can enable concurrent state writes and corruption.
+- A refresh-only plan can accept observed drift into state; it does not restore the configured file content.
+- Terminating the demo abruptly may require checking for a surviving lock-holder process before rerun.
 
 ## Wiki
+
 ![Lesson 23 visual](assets/lesson-23-visual.svg)
 ![Lesson 23 diagram](assets/lesson-23-diagram.svg)
 
-**Concept snapshot:** Explain locking, drift, refresh-only plans, and when to review state carefully.
-
-**Key terms:** `State`, `model`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Let the script finish so its finally block stops the lock process and deletes the temporary directory.
+- If running steps manually in another disposable directory, destroy the local_file resource before deleting state.
+- Confirm no lesson-23 temporary directory, generated file, or lock process remains.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What different actions do normal and refresh-only plans propose after the file edit?
+2. How do you prove a lock is stale before force-unlock?
+3. Why is the tracked lab copied rather than modified in place?
 

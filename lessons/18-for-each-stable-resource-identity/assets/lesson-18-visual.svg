@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 18 visual: for_each with Stable Resource Identity</title>
-  <desc id="desc">A colorful Terraform lesson diagram showing the concept, workflow, and environment color legend.</desc>
+  <desc id="desc">For-each card describes a Configuration lab where enduring map keys preserve resource identity, and the review rhythm checks those stable addresses before promotion between environments.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

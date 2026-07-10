@@ -1,62 +1,66 @@
 # Lesson 31: Azure Storage Static Assets Lab with New Site Content
 
-## Objectives
-- Host a tiny static asset site from Azure Storage.
-- Connect the lesson to Terraform Associate 004 objective area: Azure.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+The HTML is intentionally tiny so the plan's infrastructure and content relationships remain visible.
+
+## Certification alignment
+
+- `3e` — Apply changes to infrastructure with Terraform — **hands-on**: The Azure Storage static-site resources reference one another while local content files become managed blob objects.
+- `3f` — Destroy Terraform-managed infrastructure — **hands-on**: The Azure Storage static-site resources reference one another while local content files become managed blob objects.
+- `4b` — Refer to resource attributes and create cross-resource references — **hands-on**: The Azure Storage static-site resources reference one another while local content files become managed blob objects.
 
 ## Scenario
+
 A service-status page publishes a lightweight status and error page for support teams.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Review the site directory before tracing files into Terraform-managed storage objects.
+2. Follow the resource group, storage account, static-website settings, and blob references in dependency order.
+3. Run a credentialed plan and verify content type, source hash, and endpoint outputs.
+4. If applied, request the index and 404 paths, change one test line in a disposable copy, and review the focused blob update.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- The plan creates storage resources and uploads only the tracked static assets.
+- Cross-resource references connect the container or static-site endpoint to content objects.
+- The endpoint serves the current index and configured error document after apply.
+
+## Failure modes
+
+- Storage-account names are global and can collide or violate naming rules.
+- A missing source file or wrong content type can make the site incomplete despite successful infrastructure creation.
+- Public static-site behavior may conflict with an organization's network or data-exposure policy.
 
 ## Wiki
+
 ![Lesson 31 visual](assets/lesson-31-visual.svg)
 ![Lesson 31 diagram](assets/lesson-31-diagram.svg)
 
-**Concept snapshot:** Host a tiny static asset site from Azure Storage.
-
-**Key terms:** `Azure`, `static site`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, destroy uploaded content before the storage account through the normal dependency plan and verify the resource group is gone.
+- Revert disposable site-content changes and remove copied inputs after destroy.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which reference orders content after storage configuration?
+2. How does a source hash make content drift visible?
+3. Which security review is required before enabling public static hosting?
 

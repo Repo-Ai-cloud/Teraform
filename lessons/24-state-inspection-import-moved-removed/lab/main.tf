@@ -26,17 +26,15 @@ resource "terraform_data" "lesson_contract" {
     region        = var.location
     location      = var.location
     workload      = local.workload_name
-    scenario      = "An existing Azure resource group is being brought under Terraform management."
+    scenario      = "A logical Random provider object is imported, inspected, renamed, and removed from state in a disposable directory."
     tags          = local.common_tags
   }
 }
 
-
-# Example only: uncomment after a real refactor from the old address.
-# moved {
-#   from = terraform_data.old_name
-#   to   = terraform_data.lesson_contract
-# }
+resource "random_id" "import_target" {
+  byte_length = 4
+  prefix      = "${local.normalized_prefix}-${local.environment}-"
+}
 
 
 

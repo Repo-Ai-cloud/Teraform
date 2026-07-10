@@ -8,8 +8,3 @@ Get-ChildItem -Path $CourseRoot -Directory -Recurse -Force -Filter ".terraform" 
   ForEach-Object {
     Remove-Item -LiteralPath $_.FullName -Recurse -Force
   }
-
-Get-ChildItem -Path $CourseRoot -File -Recurse -Force -Filter ".terraform.lock.hcl" |
-  ForEach-Object {
-    Remove-Item -LiteralPath $_.FullName -Force
-  }

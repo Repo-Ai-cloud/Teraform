@@ -1,0 +1,10 @@
+resource_group_name  = "replace-with-bootstrap-output"
+storage_account_name = "replace-with-bootstrap-output"
+container_name       = "tfstate"
+key                  = "lesson-22/workload.tfstate"
+use_cli              = true
+use_azuread_auth     = true
+
+# Authentication comes from an existing `az login` session. Keep credentials
+# out of backend configuration because Terraform caches backend settings under
+# .terraform and embeds them in saved plan files.

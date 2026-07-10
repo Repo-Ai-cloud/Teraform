@@ -1,63 +1,66 @@
 # Lesson 22: Azure Remote Backend with Storage Account
 
-    ## Objectives
-    - Prepare an Azure Storage backend configuration without committing secrets.
-    - Connect the lesson to Terraform Associate 004 objective area: State.
-    - Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+This advanced Azure lab is optional to apply but its migration and cleanup order is mandatory reading.
 
-    ## Scenario
-    A team is moving state from a laptop to a locked storage account.
+## Certification alignment
 
-    ## Walkthrough
-    Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
+- `2d` — Explain how Terraform uses and manages state — **hands-on**: The bootstrap and workload roots exercise local state, Azure Blob locking, and an azurerm backend migration using use_azuread_auth and Azure CLI authentication.
+- `6a` — Describe the local backend — **guided**: The bootstrap and workload roots exercise local state, Azure Blob locking, and an azurerm backend migration using use_azuread_auth and Azure CLI authentication.
+- `6b` — Describe state locking — **hands-on**: The bootstrap and workload roots exercise local state, Azure Blob locking, and an azurerm backend migration using use_azuread_auth and Azure CLI authentication.
+- `6c` — Configure remote state using the backend block — **hands-on**: The bootstrap and workload roots exercise local state, Azure Blob locking, and an azurerm backend migration using use_azuread_auth and Azure CLI authentication.
 
-    The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+## Scenario
+
+A team is moving workload state from a laptop to an Azure Storage backend protected by Microsoft Entra ID.
+
+## Walkthrough
+
+1. In lab/bootstrap, confirm required provider registrations, plan the resource group, storage account, private container, and Storage Blob Data Contributor assignment for the current CLI principal, then apply only when authorized.
+2. Copy the bootstrap outputs into an untracked backend configuration based on backend.azurerm.tfbackend.example; do not place credentials in it.
+3. In lab, initialize locally, apply the tiny workload, back up the local state securely, then run terraform init -migrate-state -backend-config=backend.azurerm.tfbackend and approve the migration.
+4. Run terraform state list and a no-change plan against the Azure backend, then rehearse the safe reverse order for cleanup.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab/bootstrap
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- Bootstrap outputs provide resource group, storage account, container, key, use_azuread_auth, and use_cli settings without a storage key.
+- The workload begins in local state and is subsequently visible through the initialized remote backend.
+- Concurrent state-writing operations are protected by Azure Blob locking while data-plane access uses least-privilege Entra authorization.
+
+## Failure modes
+
+- Contributor on the resource group does not automatically grant Blob data-plane access.
+- Destroying the storage account before the workload removes the backend needed to destroy or inspect that workload.
+- Backend blocks cannot read normal input variables, and a committed backend file must not contain credentials.
 
 ## Wiki
+
 ![Lesson 22 visual](assets/lesson-22-visual.svg)
 ![Lesson 22 diagram](assets/lesson-22-diagram.svg)
 
-**Concept snapshot:** Prepare an Azure Storage backend configuration without committing secrets.
-
-**Key terms:** `State`, `backend`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-    1. Open the `lab/` folder and review the Terraform files.
-    2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-    3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. For a real backend migration, copy `backend.hcl.example` outside source control and run `terraform init -backend-config=backend.hcl`.
-    4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-    This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-    - If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-    - Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-    - Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-    ## Check Questions
-    1. Which Terraform Associate objective does this lesson reinforce?
-    2. Which values belong in variables, locals, and outputs in this example?
-    3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Destroy the workload while the Azure backend still exists and verify its remote state contains no managed workload objects.
+- Only after workload cleanup, reinitialize lab/bootstrap, destroy the role assignment, container/storage account, and resource group, and verify deletion.
+- Delete local state backups and untracked backend configuration only after migration and cleanup are confirmed; preserve both root lock files.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Why does the backend bootstrap need a separate root and state?
+2. Which role grants blob data-plane access, and why is management-plane Contributor insufficient?
+3. What exact cleanup ordering prevents loss of access to workload state?
 

@@ -1,63 +1,63 @@
 # Lesson 39: Governance, Drift Detection, and Policy Concepts
 
-## Objectives
-- Explain policy checks, drift detection, run tasks, and review gates.
-- Connect the lesson to Terraform Associate 004 objective area: HCP Terraform.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+No paid feature is required to complete the active lab; optional cloud work needs an external account and authorization.
+
+## Certification alignment
+
+- `6d` — Manage resource drift and Terraform state — **guided**: The active local model and guided HCP review cover drift, health, policy, run tasks, projects, and approvals; an optional Azure resource-group extension uses HCP dynamic credentials without a client secret.
+- `8b` — Describe HCP Terraform collaboration and governance features — **conceptual**: The active local model and guided HCP review cover drift, health, policy, run tasks, projects, and approvals; an optional Azure resource-group extension uses HCP dynamic credentials without a client secret.
+- `8c` — Describe how to organize and use HCP Terraform workspaces and projects — **conceptual**: The active local model and guided HCP review cover drift, health, policy, run tasks, projects, and approvals; an optional Azure resource-group extension uses HCP dynamic credentials without a client secret.
 
 ## Scenario
-Compliance reviewers want evidence before production infrastructure changes.
+
+Compliance reviewers want drift evidence and policy decisions before production infrastructure changes.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Run the account-free model and classify each governance capability as local, HCP core, or plan-dependent.
+2. Review cloud.tf.example, azure-dynamic-credentials.tf.example, and hcp-environment-variables.example without adding secrets.
+3. Optionally configure HCP workload identity for Azure, run the resource-group plan with dynamic credentials, and verify no static ARM_CLIENT_SECRET is present.
+4. Walk through a detected-drift decision: accept with refresh-only state update, correct through configuration, or escalate ownership; then place policy and approval checks around the chosen run.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform validate
+terraform plan
+```
+
+The local validation path requires no HCP account. Any HCP Terraform procedure below is **optional**, uses an external account, and must be cleaned up in that account when complete.
+
+## Expected results
+
+- Local outputs provide a governance decision model with no external account.
+- The optional Azure run obtains short-lived credentials through HCP/Azure trust and creates only the reviewed resource group.
+- Paid policy or advanced governance features remain guided and are not presented as available on every tier.
+
+## Failure modes
+
+- Dynamic credentials fail when Azure federated identity, audience, tenant, or subscription settings do not match.
+- Drift detection identifies differences but does not decide whether configuration or the remote object is authoritative.
+- A policy pass does not replace human review of cost, security, and destructive plan actions.
 
 ## Wiki
+
 ![Lesson 39 visual](assets/lesson-39-visual.svg)
 ![Lesson 39 diagram](assets/lesson-39-diagram.svg)
 
-**Concept snapshot:** Explain HCP Terraform policy checks, drift detection, health assessments, run tasks, and review gates.
-
-**Key terms:** `HCP Terraform`, `governance`, `policy checks`, `drift detection`, `health assessments`, `run tasks`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
-4. What evidence would a reviewer need before approving a policy override or drift remediation run?
+- For optional Azure/HCP use, destroy the resource group through the same workspace before removing its dynamic-credential trust.
+- Delete the disposable workspace/project and revoke temporary access only when you own them; keep guided examples tracked and secret-free.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What choices follow a drift finding?
+2. How do dynamic credentials avoid a long-lived client secret?
+3. Which governance features are conceptual or plan-dependent in this lesson?
 

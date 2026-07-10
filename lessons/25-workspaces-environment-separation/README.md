@@ -1,62 +1,61 @@
 # Lesson 25: Workspaces and Environment Separation
 
-## Objectives
-- Use workspaces carefully and recognize when separate directories are clearer.
-- Connect the lesson to Terraform Associate 004 objective area: State.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+CLI workspaces are useful for this small exercise, not a universal environment-isolation architecture.
+
+## Certification alignment
+
+- `2d` — Explain how Terraform uses and manages state — **hands-on**: Local CLI workspaces create separate state instances so their outputs and managed local contracts can be compared.
+- `6a` — Describe the local backend — **hands-on**: Local CLI workspaces create separate state instances so their outputs and managed local contracts can be compared.
 
 ## Scenario
+
 A small training lab tracks dev and test instances from the same configuration.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Run terraform workspace list and identify the current workspace before applying anything.
+2. Create dev and test workspaces, plan each with distinct non-secret inputs, and inspect terraform.workspace in the output.
+3. Apply only local terraform_data instances if you want to compare workspace-isolated state lists.
+4. Explain when separate roots, backends, credentials, and access controls are safer than CLI workspaces.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- Each workspace has an independent state snapshot for the same configuration.
+- Switching workspaces changes the selected state and the workspace-derived output.
+- Objects in dev state do not appear in terraform state list while test is selected.
+
+## Failure modes
+
+- Applying in the wrong selected workspace updates the wrong state instance.
+- CLI workspaces do not by themselves provide strong environment access isolation.
+- Deleting a nonempty workspace fails or tempts unsafe force deletion.
 
 ## Wiki
+
 ![Lesson 25 visual](assets/lesson-25-visual.svg)
 ![Lesson 25 diagram](assets/lesson-25-diagram.svg)
 
-**Concept snapshot:** Use workspaces carefully and recognize when separate directories are clearer.
-
-**Key terms:** `State`, `workspace`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Destroy the local instance in every nondefault workspace before deleting that workspace.
+- Switch back to default, verify workspace list, and remove only generated local state after all instances are destroyed.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What does a CLI workspace isolate, and what does it share?
+2. How can a pipeline prove it selected the intended workspace?
+3. When should production use a separate root instead?
 

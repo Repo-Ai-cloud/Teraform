@@ -1,7 +1,7 @@
 **/.terraform/
-**/.terraform.lock.hcl
 **/terraform.tfvars
 **/*.tfstate
 **/*.tfstate.*
 **/*.tfplan
 **/generated-runbook.txt
+**/terraform-debug*.log

@@ -29,8 +29,15 @@ resource "terraform_data" "lesson_contract" {
     hcp_terraform_workflow = {
       state_location = "HCP Terraform managed state"
       run_location   = "remote operations"
-      run_stages     = ["plan", "policy checks", "approval", "apply"]
-      integration    = ["terraform login", "cloud block", "CLI-driven workflow", "VCS-driven workflow"]
+      included_stages = [
+        "configuration upload",
+        "remote plan",
+        "manual confirmation",
+        "remote apply",
+        "managed state version"
+      ]
+      optional_governance = ["policy checks", "run tasks"]
+      integration         = ["terraform login", "cloud block", "CLI-driven workflow", "VCS-driven workflow"]
     }
     tags = local.common_tags
   }

@@ -1,63 +1,63 @@
 # Lesson 12: Sensitive Values and Secret Handling
 
-## Objectives
-- Mark sensitive values and avoid placing secrets in source control.
-- Connect the lesson to Terraform Associate 004 objective area: Configuration.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Only synthetic throwaway values belong in this lab; state and logs remain sensitive even during training.
+
+## Certification alignment
+
+- `4h` — Understand best practices for managing sensitive data, including secrets management with Vault — **hands-on**: The lab contrasts a sensitive state-backed terraform_data value with an ephemeral random_password, then guides a product-accurate HashiCorp Vault versus Azure Key Vault comparison.
+- Additional 004 topic `004-ephemeral-values` — hands-on comparison of state-backed and ephemeral values.
+- Additional 004 topic `004-write-only-arguments` — guided review of provider-supported write-only arguments.
 
 ## Scenario
-A secure app pattern needs to pass a placeholder secret reference without displaying it.
+
+A secure application workflow needs transient credentials without pretending that output redaction removes all state risk.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Use only the throwaway example value and apply the state-backed example in a disposable state.
+2. Observe that the sensitive output is redacted, then inspect state securely to confirm the normal value can still persist.
+3. Run the ephemeral random_password path and verify the transient value is omitted from plan and state persistence.
+4. Review hashicorp-vault.tf.example and azure-key-vault.tf.example; identify which product each provider/data source addresses and where ephemeral or write-only support must be explicit.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- Routine CLI output redacts the sensitive state-backed value while state inspection proves redaction is not deletion.
+- The ephemeral password can flow only through supported ephemeral contexts and is absent from persisted plan/state data.
+- The two example files clearly distinguish HashiCorp Vault from Microsoft's Azure Key Vault.
+
+## Failure modes
+
+- Using a real secret would place unnecessary sensitive material in a training state or log.
+- Passing an ephemeral value into a non-ephemeral argument fails because Terraform must preserve the persistence boundary.
+- Assuming every provider argument is write-only ignores provider schema support.
 
 ## Wiki
+
 ![Lesson 12 visual](assets/lesson-12-visual.svg)
 ![Lesson 12 diagram](assets/lesson-12-diagram.svg)
 
-**Concept snapshot:** Mark sensitive values, keep secrets out of source control, and recognize where Vault, ephemeral values, and write-only provider arguments fit.
-
-**Key terms:** `Configuration`, `sensitive`, `Vault`, `ephemeral`, `write-only`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
-4. Why should ephemeral values and write-only arguments be used only where Terraform and the provider explicitly support them?
+- Destroy the throwaway state-backed resource before deleting its disposable state.
+- Delete any saved plan, state copy, shell history, or debug output that could contain the exercise value.
+- Do not enable or apply either secret-manager example with production credentials in this course lab.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What does sensitive marking hide, and what can it still retain?
+2. How does an ephemeral value change persistence expectations?
+3. Why must the exam objective's Vault wording not be replaced with Azure Key Vault?
 

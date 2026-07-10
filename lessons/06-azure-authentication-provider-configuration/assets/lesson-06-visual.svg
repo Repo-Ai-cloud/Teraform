@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 06 visual: Azure Authentication and Provider Configuration</title>
-  <desc id="desc">A colorful Terraform lesson diagram showing the concept, workflow, and environment color legend.</desc>
+  <desc id="desc">Fundamentals lesson card marks Azure authentication as a resource-group lab and focuses the review rhythm on configuring AzureRM without hard-coded credentials before promoting changes beyond dev.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

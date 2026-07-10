@@ -22,13 +22,18 @@ resource "terraform_data" "lesson_contract" {
   input = {
     lesson_title = "Governance, Drift Detection, and Policy Concepts"
     governance_model = {
-      policy_checks = ["required tags", "allowed regions", "approved resource types"]
+      no_cost_workflow = ["projects", "workspaces", "remote runs", "managed state", "run triggers"]
+      guided_governance = {
+        policy_checks = ["required tags", "allowed regions", "approved resource types"]
+        run_tasks     = ["security scan", "cost estimate", "change evidence"]
+        approvals     = ["speculative plan review", "policy override review", "manual apply gate"]
+      }
       drift_detection = {
+        coverage          = "guided; availability depends on the HCP Terraform plan"
         health_assessment = true
         review_owner      = "platform-learning"
       }
-      run_tasks = ["security scan", "cost estimate", "change evidence"]
-      approvals = ["speculative plan review", "policy override review", "manual apply gate"]
+      optional_azure_extension = "A resource group can use short-lived HCP Terraform dynamic credentials."
     }
     tags = local.common_tags
   }

@@ -1,62 +1,68 @@
 # Lesson 03: First Azure Resource Group Lab
 
-## Objectives
-- Create the smallest useful Azure landing point with Terraform.
-- Connect the lesson to Terraform Associate 004 objective area: Workflow.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+This is the smallest Azure apply/destroy lab; keep it in a disposable subscription with a cost budget.
+
+## Certification alignment
+
+- `1b` — Describe the advantages of IaC patterns — **guided**: Creating and destroying one azurerm_resource_group exercises the reviewed Terraform workflow and demonstrates repeatable IaC benefits.
+- `3a` — Describe the Terraform workflow — **hands-on**: Creating and destroying one azurerm_resource_group exercises the reviewed Terraform workflow and demonstrates repeatable IaC benefits.
+- `3d` — Generate and review an execution plan for Terraform — **hands-on**: Creating and destroying one azurerm_resource_group exercises the reviewed Terraform workflow and demonstrates repeatable IaC benefits.
+- `3e` — Apply changes to infrastructure with Terraform — **hands-on**: Creating and destroying one azurerm_resource_group exercises the reviewed Terraform workflow and demonstrates repeatable IaC benefits.
+- `3f` — Destroy Terraform-managed infrastructure — **hands-on**: Creating and destroying one azurerm_resource_group exercises the reviewed Terraform workflow and demonstrates repeatable IaC benefits.
 
 ## Scenario
+
 The team needs a disposable resource group for an event check-in proof of concept.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Confirm the active Azure subscription and copy only non-secret overrides into terraform.tfvars.
+2. Trace how variables and locals produce the resource-group name and tags.
+3. Review the saved plan, apply it only when authorized, then compare terraform output with the Azure resource group.
+4. Run terraform plan again and explain why an unchanged configuration should converge to no changes.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- The plan proposes one Azure resource group with the expected location and tags.
+- After apply, outputs expose the managed name and ID and a second plan is empty.
+- Destroy proposes removal of only the object tracked by this lesson's state.
+
+## Failure modes
+
+- A globally inappropriate or policy-blocked region can make the Azure API reject apply.
+- Using the wrong subscription creates an otherwise valid resource in the wrong place.
+- Deleting state before destroy leaves the resource group outside this workflow's management.
 
 ## Wiki
+
 ![Lesson 03 visual](assets/lesson-03-visual.svg)
 ![Lesson 03 diagram](assets/lesson-03-diagram.svg)
 
-**Concept snapshot:** Create the smallest useful Azure landing point with Terraform.
-
-**Key terms:** `Workflow`, `resource group`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, run terraform destroy and verify the resource group no longer exists before deleting local state.
+- Retain the committed provider lock file for repeatable future runs.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which plan fields prove the resource group will be created in the intended subscription context?
+2. What makes the second plan an idempotence check?
+3. What would be lost if the state file disappeared before destroy?
 

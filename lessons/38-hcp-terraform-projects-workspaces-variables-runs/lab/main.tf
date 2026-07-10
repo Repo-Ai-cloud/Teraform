@@ -24,14 +24,15 @@ resource "terraform_data" "lesson_contract" {
     hcp_project  = "${local.normalized_prefix}-${local.environment}-platform"
     workspaces = {
       network = {
-        purpose      = "shared Azure foundation"
-        execution    = "remote"
-        run_triggers = ["app"]
+        purpose                = "shared Azure foundation"
+        execution              = "remote"
+        allowed_state_consumer = "app"
       }
       app = {
-        purpose      = "application deployment"
-        execution    = "remote"
-        run_triggers = []
+        purpose              = "application deployment"
+        execution            = "remote"
+        run_triggered_by     = "network"
+        reads_network_output = "network_cidr"
       }
     }
     variable_sets = {

@@ -1,0 +1,17 @@
+# Review-only Azure example. It is not active in the credential-free lab because
+# this module provisions Azure resources and has several transitive providers.
+module "avm_virtual_network_review" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "~> 0.19"
+
+  address_space = ["10.42.0.0/16"]
+  location      = "eastus"
+  name          = "atfa-dev-review-vnet"
+  parent_id     = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/atfa-dev-review-rg"
+  subnets = {
+    web = {
+      name             = "web"
+      address_prefixes = ["10.42.0.0/24"]
+    }
+  }
+}

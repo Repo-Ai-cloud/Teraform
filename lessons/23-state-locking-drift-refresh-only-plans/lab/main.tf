@@ -31,6 +31,14 @@ resource "terraform_data" "lesson_contract" {
   }
 }
 
+# Apply this resource in the lesson's disposable demo directory, edit the file
+# outside Terraform, and run a normal or refresh-only plan to observe drift.
+resource "local_file" "drift_target" {
+  filename        = "${path.root}/generated/drift-demo.txt"
+  content         = var.drift_message
+  file_permission = "0644"
+}
+
 
 
 

@@ -1,0 +1,6 @@
+# Replace the placeholder with an absolute directory and create it before init.
+plugin_cache_dir   = "REPLACE_WITH_ABSOLUTE_PATH/.terraform.d/plugin-cache"
+disable_checkpoint = true
+
+# Credentials belong in environment variables, a platform credential helper,
+# or the credentials file created by `terraform login`, never in this example.

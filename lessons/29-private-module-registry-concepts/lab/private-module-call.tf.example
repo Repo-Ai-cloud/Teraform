@@ -1,0 +1,13 @@
+# Optional private-registry call. First authenticate interactively with
+# `terraform login app.terraform.io`; never put the API token in this file.
+# Replace the example organization, module name, version, and inputs with a
+# module that exists in your own HCP Terraform organization.
+module "approved_azure_workload" {
+  source  = "app.terraform.io/example-organization/azure-workload/azurerm"
+  version = "1.2.0"
+
+  environment    = var.environment
+  location       = var.location
+  project_prefix = var.project_prefix
+  workload_name  = var.workload_name
+}

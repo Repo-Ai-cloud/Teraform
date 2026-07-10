@@ -1,62 +1,65 @@
 # Lesson 27: Module Composition for Networking
 
-## Objectives
-- Compose a reusable networking module with clear inputs and outputs.
-- Connect the lesson to Terraform Associate 004 objective area: Modules.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Module composition should expose the smallest stable interface needed by downstream consumers.
+
+## Certification alignment
+
+- `5b` — Describe variable scope within modules — **hands-on**: The Azure root composes a local networking module through typed inputs, provider inheritance, and outputs used by downstream configuration.
+- `5c` — Use modules in configuration — **hands-on**: The Azure root composes a local networking module through typed inputs, provider inheritance, and outputs used by downstream configuration.
 
 ## Scenario
+
 A product squad needs a compact virtual network foundation for multiple application tiers.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Review the child module's variables, resources, and outputs before the root call.
+2. Trace the AzureRM provider requirement from root to child without adding a lock file inside shared/modules.
+3. Plan the virtual network and subnets, then map root inputs to child resources and child outputs back to the root.
+4. Change one subnet in a disposable input and inspect the focused module-addressed plan.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- The plan shows resource addresses beneath module.network or the lesson's named module call.
+- The child receives only its declared network values and returns selected IDs or names.
+- Provider selection and lock ownership remain at the root module.
+
+## Failure modes
+
+- Overlapping or invalid CIDR ranges can pass module structure checks but fail validation or Azure rules.
+- Renaming the module call changes resource addresses and needs a moved transition for existing state.
+- Pinning providers only inside a child can conflict with root selection and reuse.
 
 ## Wiki
+
 ![Lesson 27 visual](assets/lesson-27-visual.svg)
 ![Lesson 27 diagram](assets/lesson-27-diagram.svg)
 
-**Concept snapshot:** Compose a reusable networking module with clear inputs and outputs.
-
-**Key terms:** `Modules`, `module network`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, destroy the network root so child-managed Azure resources are removed in dependency order.
+- Delete copied inputs after destroy; keep the root lock and never add a lock inside the reusable child module.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which provider configuration does the child use?
+2. What output enables safe downstream composition without exposing every resource?
+3. How would a module call rename affect existing addresses?
 

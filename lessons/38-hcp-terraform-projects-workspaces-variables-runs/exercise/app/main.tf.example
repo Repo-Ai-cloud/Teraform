@@ -1,0 +1,27 @@
+terraform {
+  required_version = ">= 1.12.0, < 2.0.0"
+}
+
+# The network workspace grants only this app workspace permission to read its
+# state. HCP Terraform supplies remote-run authentication automatically.
+data "terraform_remote_state" "network" {
+  backend = "remote"
+
+  config = {
+    hostname     = "app.terraform.io"
+    organization = "replace-with-your-organization"
+    workspaces = {
+      name = "atfa-lesson-38-network"
+    }
+  }
+}
+
+resource "terraform_data" "app" {
+  input = {
+    network_cidr = data.terraform_remote_state.network.outputs.network_cidr
+  }
+}
+
+output "consumed_network_cidr" {
+  value = terraform_data.app.output.network_cidr
+}

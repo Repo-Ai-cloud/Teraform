@@ -1,63 +1,63 @@
 # Lesson 37: HCP Terraform Workflow Overview
 
-## Objectives
-- Describe remote runs, state storage, and collaboration in HCP Terraform.
-- Connect the lesson to Terraform Associate 004 objective area: HCP Terraform.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+HCP account work is optional; the lesson has a complete local validation path.
+
+## Certification alignment
+
+- `8a` — Use HCP Terraform to create infrastructure — **hands-on**: The optional cloud.tf.example supports terraform login, remote initialization, a no-cost workspace run, managed state, and cleanup; collaboration and paid-tier capabilities are labeled separately.
+- `8b` — Describe HCP Terraform collaboration and governance features — **guided**: The optional cloud.tf.example supports terraform login, remote initialization, a no-cost workspace run, managed state, and cleanup; collaboration and paid-tier capabilities are labeled separately.
+- `8d` — Configure and use HCP Terraform integration — **hands-on**: The optional cloud.tf.example supports terraform login, remote initialization, a no-cost workspace run, managed state, and cleanup; collaboration and paid-tier capabilities are labeled separately.
 
 ## Scenario
-The platform team compares local runs with a central remote-run workflow.
+
+The platform team compares workstation runs with an optional HCP Terraform remote-run workflow.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Run the local baseline first to understand the same terraform_data configuration with local execution.
+2. Optionally create a free HCP Terraform account and workspace, run terraform login, and copy cloud.tf.example to cloud.tf only in a disposable copy with your organization and workspace names.
+3. Run init, plan, and apply so execution and state move to the HCP workspace; inspect the remote run log and state version.
+4. Destroy through the HCP workspace, verify state is clean, remove the disposable copy, and compare remote collaboration with the local workflow.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform validate
+terraform plan
+```
+
+The local validation path requires no HCP account. Any HCP Terraform procedure below is **optional**, uses an external account, and must be cleaned up in that account when complete.
+
+## Expected results
+
+- The account-free path validates and plans locally.
+- The optional path queues an HCP Terraform run and stores state versions in the selected workspace.
+- Run history separates configuration, plan, apply, logs, and user actions without requiring a paid policy feature.
+
+## Failure modes
+
+- A token for the wrong hostname or organization prevents initialization.
+- A workspace Terraform version that differs from the course baseline can produce inconsistent results.
+- Deleting the HCP workspace before destroy can strand infrastructure or obscure managed state.
 
 ## Wiki
+
 ![Lesson 37 visual](assets/lesson-37-visual.svg)
 ![Lesson 37 diagram](assets/lesson-37-diagram.svg)
 
-**Concept snapshot:** Compare local CLI execution with HCP Terraform remote operations, managed state, run stages, and CLI or VCS integration.
-
-**Key terms:** `HCP Terraform`, `remote operations`, `managed state`, `terraform login`, `cloud block`, `VCS-driven workflow`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
-4. Which responsibilities move from an operator workstation to HCP Terraform during remote operations?
+- For optional HCP use, run terraform destroy remotely and confirm the workspace state has no managed infrastructure.
+- Remove the disposable cloud configuration, delete the training workspace/project if no longer needed, and revoke unneeded local API tokens.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which work moves from the workstation into HCP Terraform?
+2. Where is state stored after remote initialization?
+3. Which collaboration features are core, and which may depend on a paid tier?
 

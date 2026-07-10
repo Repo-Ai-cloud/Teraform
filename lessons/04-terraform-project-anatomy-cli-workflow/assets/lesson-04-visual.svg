@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 04 visual: Terraform Project Anatomy and CLI Workflow</title>
-  <desc id="desc">A colorful Terraform lesson diagram showing the concept, workflow, and environment color legend.</desc>
+  <desc id="desc">CLI-workflow card groups the lesson under Workflow, identifies it as a model lab, and connects the plan-inspect-apply-cleanup cycle with reading a Terraform project as inputs, resources, outputs, and commands.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

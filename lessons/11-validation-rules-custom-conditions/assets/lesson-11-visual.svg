@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 11 visual: Validation Rules and Custom Conditions</title>
-  <desc id="desc">A colorful Terraform lesson diagram showing the concept, workflow, and environment color legend.</desc>
+  <desc id="desc">Custom-conditions card labels the exercise as model validation and pairs the normal review cycle with protecting inputs through validation rules and assertions before environment promotion.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

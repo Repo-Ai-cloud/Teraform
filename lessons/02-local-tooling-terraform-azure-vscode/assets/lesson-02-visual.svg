@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 02 visual: Local Tooling: Terraform CLI, Azure CLI, VS Code</title>
-  <desc id="desc">A colorful Terraform lesson diagram showing the concept, workflow, and environment color legend.</desc>
+  <desc id="desc">Workflow lesson card presents Terraform CLI, Azure CLI, and VS Code as the local model toolchain, calls out the standard review rhythm, and uses a dev-to-prod legend to frame safe progression through the labs.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

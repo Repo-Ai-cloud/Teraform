@@ -1,0 +1,22 @@
+name: Course Freshness
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 10 * *"
+
+permissions:
+  contents: read
+
+jobs:
+  report-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Compare recorded versions with official sources
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./shared/scripts/Test-CourseFreshness.ps1

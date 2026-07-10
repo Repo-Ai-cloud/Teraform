@@ -1,63 +1,63 @@
 # Lesson 38: HCP Terraform Projects, Workspaces, Variables, and Runs
 
-## Objectives
-- Organize workspaces, variables, and run triggers for team delivery.
-- Connect the lesson to Terraform Associate 004 objective area: HCP Terraform.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+The hands-on HCP path is optional and must use a disposable project with authorized organization access.
+
+## Certification alignment
+
+- `8b` — Describe HCP Terraform collaboration and governance features — **guided**: Optional TFE configuration creates a project plus network and app workspaces; the exercise demonstrates remote-state consumption and a network-to-app run trigger.
+- `8c` — Describe how to organize and use HCP Terraform workspaces and projects — **hands-on**: Optional TFE configuration creates a project plus network and app workspaces; the exercise demonstrates remote-state consumption and a network-to-app run trigger.
+- `8d` — Configure and use HCP Terraform integration — **hands-on**: Optional TFE configuration creates a project plus network and app workspaces; the exercise demonstrates remote-state consumption and a network-to-app run trigger.
 
 ## Scenario
-Multiple app teams need a shared project layout and variable-set strategy.
+
+Multiple application teams need a project layout, shared variables, managed state, and an explicit network-to-application dependency.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Validate the local model, then inspect lab/hcp-setup.tf.example without enabling it and identify the project, two workspaces, remote-state consumer, and run trigger.
+2. Review exercise/network and exercise/app cloud examples and trace the specific output the app consumes.
+3. Optionally, in an authorized disposable HCP organization, configure the TFE provider outside source control and apply the setup example.
+4. Run the network workspace, verify the successful apply queues the app run, and distinguish run-trigger ordering from remote-state data access.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform validate
+terraform plan
+```
+
+The local validation path requires no HCP account. Any HCP Terraform procedure below is **optional**, uses an external account, and must be cleaned up in that account when complete.
+
+## Expected results
+
+- The local path documents the intended topology without an account.
+- Optional setup creates one project with separate network and app workspace state and a directed run trigger.
+- The app reads only the explicitly shared network output rather than another workspace's entire internal configuration.
+
+## Failure modes
+
+- A run trigger does not by itself grant permission to read remote state.
+- Circular triggers or overly broad remote-state sharing create fragile coupling.
+- Applying the TFE setup in the wrong organization can create or modify real administrative objects.
 
 ## Wiki
+
 ![Lesson 38 visual](assets/lesson-38-visual.svg)
 ![Lesson 38 diagram](assets/lesson-38-diagram.svg)
 
-**Concept snapshot:** Organize HCP Terraform projects, workspaces, variable sets, and run triggers for team delivery.
-
-**Key terms:** `HCP Terraform`, `projects`, `workspaces`, `variable sets`, `run triggers`, `remote state`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
-4. Which values belong in a workspace variable, which belong in a variable set, and which should stay in a secret store?
+- Destroy any infrastructure in app before network, then remove the optional run trigger and training workspaces through the owning setup root.
+- Delete disposable cloud files and revoke temporary tokens; do not remove shared organization resources you do not own.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What does the run trigger do that remote-state access does not?
+2. Why place network and app state in separate workspaces?
+3. Which variables belong in a shared variable set versus one workspace?
 

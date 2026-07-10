@@ -26,8 +26,15 @@ resource "terraform_data" "lesson_contract" {
     region        = var.location
     location      = var.location
     workload      = local.workload_name
-    scenario      = "An organization wants shared golden modules for app teams without copy-paste drift."
-    tags          = local.common_tags
+    scenario      = "An organization publishes versioned golden modules in its private HCP Terraform registry."
+    module_source = "app.terraform.io/example-organization/azure-workload/azurerm"
+    authentication = {
+      command            = "terraform login app.terraform.io"
+      token_in_source    = false
+      token_in_tfvars    = false
+      credential_storage = "Terraform CLI credentials file"
+    }
+    tags = local.common_tags
   }
 }
 

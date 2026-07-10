@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 23 diagram: State Locking, Drift, and Refresh-Only Plans</title>
-  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <desc id="desc">A state lock blocks concurrent writers, an out-of-band change creates drift, and a refresh-only plan lets the operator review state reconciliation without changing the object.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }
@@ -27,21 +27,22 @@
   <rect class="teal" y="24" width="960" height="8" />
   <text x="54" y="72" class="meta">LESSON 23 DIAGRAM</text>
   <text x="54" y="108" class="title">State Locking, Drift, and Refresh-Only Plans</text>
-  <text x="54" y="136" class="meta">Area: State   |   Lab type: model</text>
+  <text x="54" y="136" class="meta">Objectives: 6b, 6d   |   Lab type: local state operations</text>
   <rect x="54" y="176" width="216" height="108" rx="8" class="node node-a" />
-  <text x="82" y="218" class="label">Concept</text>
+  <text x="82" y="218" class="label">State lock</text>
+  <text x="82" y="242" class="body">one writer at a time</text>
   <path class="arrow" d="M290 230 H360" />
   <rect x="382" y="176" width="216" height="108" rx="8" class="node node-b" />
-  <text x="410" y="218" class="label">Review habit</text>
+  <text x="410" y="218" class="label">External drift</text>
+  <text x="410" y="242" class="body">real object no longer matches</text>
   <path class="arrow" d="M618 230 H688" />
   <rect x="710" y="176" width="196" height="108" rx="8" class="node node-c" />
-  <text x="738" y="218" class="label">Azure operating</text>
-  <text x="738" y="242" class="label">pattern</text>
+  <text x="738" y="218" class="label">Refresh-only</text>
+  <text x="738" y="242" class="body">review state update</text>
   <rect x="54" y="312" width="852" height="112" rx="8" class="note" />
   <text x="72" y="336" class="meta">REVIEW NOTE</text>
-  <text x="72" y="352" class="body">Turn an idea into a repeatable Terraform review loop.</text>
-  <text x="72" y="394" class="body">Outcome: Explain locking, drift, refresh-only plans, and when to review state</text>
-  <text x="72" y="415" class="body">carefully.</text>
+  <text x="72" y="352" class="body">Do not bypass a lock or accept refreshed state until you understand the competing run.</text>
+  <text x="72" y="394" class="body">A refresh-only plan updates Terraform's view; it does not repair configuration drift.</text>
   <rect x="54" y="438" width="852" height="24" rx="6" class="band" />
-  <text x="72" y="455" class="small">Read left to right: inputs and intent become Terraform behavior, then a reviewed Azure-ready outcome.</text>
+  <text x="72" y="455" class="small">Review lock ownership, drift direction, and the desired source of truth before acting.</text>
 </svg>

@@ -61,7 +61,7 @@ resource "azurerm_container_app" "worker" {
 
     container {
       name   = "hello"
-      image  = "mcr.microsoft.com/k8se/quickstart:latest"
+      image  = "mcr.microsoft.com/k8se/quickstart@sha256:d24e95e1a58337150837336b665071af6bf823620ca9b27e71f9cb4c825434a0"
       cpu    = 0.25
       memory = "0.5Gi"
 

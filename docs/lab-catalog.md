@@ -1,23 +1,29 @@
 # Lab Catalog
 
-The catalog is intentionally concise. Use [course-map.yml](../course-map.yml) for machine-readable lesson metadata.
+Use [`course-map.yml`](../course-map.yml) for machine-readable status, toolchain, lesson, and objective evidence. Coverage labels mean:
 
-## Foundation
+- `hands_on`: checked-in HCL or a repeatable command exercise directly demonstrates the objective.
+- `guided`: the learner follows a documented workflow that may require Azure or HCP access.
+- `conceptual`: the lesson explains and compares behavior without claiming a runnable service exercise.
 
-Lessons 1 through 8 establish IaC thinking, tooling, providers, workflow, references, and dependencies.
+## Foundation and Workflow — Lessons 01-08
 
-## Terraform Language
+IaC advantages, service-agnostic provider architecture, local tooling, core CLI workflow, external provider installation and lock files, Azure authentication, real resource/data-source references, and explicit dependency behavior.
 
-Lessons 9 through 21 cover variables, validation, sensitive values, locals, outputs, collections, repetition, lifecycle, dynamic expressions, and functions.
+## Terraform Configuration — Lessons 09-21
 
-## State and Modules
+Variable definitions and precedence, custom conditions, sensitive versus ephemeral data, locals and outputs, structural types, transformations, repetition, lifecycle behavior, real dynamic Azure NSG blocks, and built-in functions.
 
-Lessons 22 through 29 cover remote state, drift, state inspection, workspaces, local modules, module composition, registry modules, and private registry concepts.
+## State and Modules — Lessons 22-29
 
-## Azure Implementation
+Azure backend bootstrap and migration, local/remote locking and drift, refresh-only planning, state inspection and staged import/move/remove exercises, workspaces, local module composition, a real registry module, and guided private-registry concepts.
 
-Lessons 30 through 34 apply the concepts through App Service, static websites, Container Apps, Key Vault with managed identity, and Log Analytics.
+## Azure Implementations — Lessons 30-34
 
-## Operations and HCP Terraform
+App Service on Node 24 LTS, Storage static content, Container Apps with an immutable demo image, Azure Key Vault with managed identity, and Log Analytics outputs. These reinforce Terraform behavior; Azure service trivia is not an exam objective.
 
-Lessons 35 through 40 cover provisioner tradeoffs, debugging, HCP Terraform workflows, governance, drift detection, policy concepts, and capstone review.
+## Operations, HCP Terraform, and Review — Lessons 35-40
+
+Provisioner tradeoffs, safe logging and provider caching, optional HCP remote-run and two-workspace exercises, tier-aware governance/drift concepts, and two original 30-question practice sets.
+
+Live Azure and HCP operations are always optional and excluded from pull-request CI.

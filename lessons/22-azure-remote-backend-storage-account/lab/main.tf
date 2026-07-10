@@ -14,11 +14,11 @@ locals {
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = "${var.project_prefix}-${var.environment}-${var.workload_name}-22-rg"
+  name     = "${var.project_prefix}-${var.environment}-${var.workload_name}-22-workload-rg"
   location = var.location
 
   tags = merge(local.common_tags, {
-    scenario = "A team is moving state from a laptop to a locked"
+    scenario = "A workload migrates from local state to an Entra-authenticated Azure Blob backend."
   })
 }
 

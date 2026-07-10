@@ -1,0 +1,13 @@
+terraform {
+  required_version = ">= 1.12.0, < 2.0.0"
+}
+
+resource "terraform_data" "network" {
+  input = {
+    network_cidr = "10.38.0.0/16"
+  }
+}
+
+output "network_cidr" {
+  value = terraform_data.network.output.network_cidr
+}

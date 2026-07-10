@@ -2,7 +2,9 @@
 
 An original Azure-focused study course for the HashiCorp Terraform Associate 004 exam. The repo teaches Terraform fundamentals through small, reviewable Azure scenarios, local-first exercises, lesson wikis, diagrams, and automated quality checks.
 
-Official objective reference: https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004
+> **Certification status verified 2026-07-10:** Terraform Associate **004** is the current Associate exam and tests Terraform **1.12**. This repository also validates the labs with Terraform **1.15.8** for current-runtime compatibility. See the [certification details](https://developer.hashicorp.com/certifications/infrastructure-automation), [official 004 preparation collection](https://developer.hashicorp.com/terraform/tutorials/certification-004), [objective list](https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004), [learning path](https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-study-004), and [sample question formats](https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-questions-004).
+
+"Azure Edition" describes the teaching examples in this repository. It is not a separate HashiCorp credential, and the Associate exam does not test Azure product trivia.
 
 ![Lesson 01 visual](lessons/01-iac-terraform-mental-model/assets/lesson-01-visual.svg)
 
@@ -63,9 +65,14 @@ Each lesson includes:
 |   |-- architecture-review-checklist.md
 |   |-- azure-safety-cost-guardrails.md
 |   |-- facilitator-guide.md
-|   `-- lab-quality-standard.md
+|   |-- lab-catalog.md
+|   |-- lab-quality-standard.md
+|   |-- manual-smoke-tests.md
+|   `-- version-policy.md
 |-- exam-review/
-|   `-- practice-questions.md
+|   |-- objective-map.md
+|   |-- practice-questions.md
+|   `-- study-checks.md
 |-- lessons/
 |   |-- 01-iac-terraform-mental-model/
 |   |   |-- README.md
@@ -76,21 +83,43 @@ Each lesson includes:
 |   |-- modules/
 |   |-- quality/
 |   `-- scripts/
-`-- .github/workflows/terraform-labs.yml
+`-- .github/workflows/
+    |-- course-freshness.yml
+    `-- terraform-labs.yml
 ```
+
+## Supported Toolchain
+
+Versions are intentionally split between exam fidelity and current compatibility. The dated values below are also recorded in `course-map.yml`.
+
+| Tool | Exam baseline | Current tested | Notes |
+|---|---:|---:|---|
+| Terraform CLI | 1.12.0 | 1.15.8 | All configurations accept `>= 1.12.0, < 2.0.0`. |
+| Azure CLI | n/a | 2.88.0 | Needed only for authenticated Azure plans/applies and cleanup checks. |
+| AzureRM provider | n/a | 4.80.0 | Exact selections are committed in root-module lock files. |
+| Random provider | n/a | 3.9.0 | Exact selections are committed where used. |
+| Local provider | n/a | 2.9.0 | Exact selections are committed where used. |
+
+Provider constraints define compatibility; `.terraform.lock.hcl` records the reviewed provider selections and checksums. Root lock files belong in source control. State, plans, credentials, local variable files, and `.terraform/` do not.
 
 ## Quick Start
 
-1. Install Terraform 1.12 or newer.
-2. Install PowerShell 7 or use Windows PowerShell where available.
+1. Install Terraform 1.12.x for exam-faithful practice or the current tested version for compatibility work.
+2. Install PowerShell 7. Azure resource labs also require Azure CLI.
 3. Clone the repo and open it in VS Code or your editor of choice.
-4. Start with [Lesson 01](lessons/01-iac-terraform-mental-model/).
-5. For each lesson, open the `lab/` folder and read files in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-6. Run the local workflow from the lesson `lab/` folder:
+4. Check the toolchain without changing it:
 
 ```powershell
-terraform init -backend=false
-terraform fmt
+./shared/scripts/Test-CourseEnvironment.ps1 -Profile Supported
+```
+
+5. Start with [Lesson 01](lessons/01-iac-terraform-mental-model/).
+6. For each lesson, read `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf` before running commands.
+7. Run the local workflow from the lesson `lab/` folder:
+
+```powershell
+terraform fmt -check
+terraform init -backend=false -lockfile=readonly
 terraform validate
 terraform plan
 ```
@@ -118,8 +147,17 @@ The quality script checks:
 - every lesson references both SVG assets
 - forbidden source markers are absent
 - secret, state, plan, key, and generated files are not committed
+- exact Terraform Associate objective IDs, titles, lesson evidence, and assessment coverage
+- required provider lock files are present and unchanged
 - `terraform fmt -check -recursive` passes
-- each lab initializes and validates when full validation is enabled
+- each Terraform root initializes, validates, and runs any checked-in Terraform tests
+
+GitHub Actions runs the complete gate against both Terraform 1.12.0 and 1.15.8. Provider upgrades are intentional:
+
+```powershell
+./shared/scripts/Update-CourseLocks.ps1 -Check
+# Run without -Check only when deliberately reviewing and updating providers.
+```
 
 ## Course Quality Bar
 
@@ -138,7 +176,11 @@ Start with these course assets:
 - [Architecture review checklist](docs/architecture-review-checklist.md)
 - [Azure safety and cost guardrails](docs/azure-safety-cost-guardrails.md)
 - [Facilitator guide](docs/facilitator-guide.md)
+- [Version and freshness policy](docs/version-policy.md)
+- [Manual cloud smoke tests](docs/manual-smoke-tests.md)
+- [Official objective map](exam-review/objective-map.md)
 - [Practice questions](exam-review/practice-questions.md)
+- [Open-ended study checks](exam-review/study-checks.md)
 
 ## Course Map
 
@@ -200,11 +242,20 @@ For workshops or study groups, use this rhythm:
 
 ## Safety Notes
 
-- Never commit `terraform.tfvars`, `.terraform/`, `.terraform.lock.hcl`, state files, plan files, credentials, private keys, or generated secrets.
+- Commit reviewed `.terraform.lock.hcl` files for root modules. Never commit `terraform.tfvars`, `.terraform/`, state files, plan files, credentials, private keys, debug logs, or generated secrets.
 - Labs that use the AzureRM provider include placeholder IDs so `terraform validate` can run consistently. Replace placeholders before applying.
 - Concept lessons use local Terraform constructs to keep feedback fast and avoid unnecessary cloud cost.
 - Apply labs only in a training subscription with budget alerts and permissions scoped for temporary resources.
 - Treat Terraform state as sensitive operational data even when the configuration is public.
+- Register only the Azure resource providers required by the selected lab; use the read-only environment preflight and [Azure safety guide](docs/azure-safety-cost-guardrails.md).
+
+## Terraform Editions and Services
+
+- **Terraform Community Edition / Terraform CLI** runs locally or in automation and is the default path in this repository.
+- **HCP Terraform** is HashiCorp's hosted service for remote runs, managed state, collaboration, projects, and governance. Lessons 37-39 include an optional free-account workflow.
+- **Terraform Enterprise** is the self-managed commercial offering. The course explains how it differs where the 004 objectives require recognition, but it does not add Professional-exam material.
+
+Optional HCP and live Azure exercises are never run in pull-request CI. They require explicit authentication, plan review, and cleanup.
 
 ## Public Use
 

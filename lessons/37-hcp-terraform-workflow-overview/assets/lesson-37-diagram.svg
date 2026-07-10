@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 37 diagram: HCP Terraform Workflow Overview</title>
-  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <desc id="desc">CLI-driven and VCS-driven inputs both start an HCP Terraform remote run, which evaluates configuration in a managed worker and stores state in the workspace.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }
@@ -27,19 +27,22 @@
   <rect class="teal" y="24" width="960" height="8" />
   <text x="54" y="72" class="meta">LESSON 37 DIAGRAM</text>
   <text x="54" y="108" class="title">HCP Terraform Workflow Overview</text>
-  <text x="54" y="136" class="meta">Area: HCP Terraform   |   Lab type: hcp</text>
+  <text x="54" y="136" class="meta">Objectives: 8a, 8d   |   Optional free-account workflow</text>
   <rect x="54" y="176" width="216" height="108" rx="8" class="node node-a" />
-  <text x="82" y="218" class="label">VCS change</text>
+  <text x="82" y="218" class="label">CLI or VCS</text>
+  <text x="82" y="242" class="body">configuration change</text>
   <path class="arrow" d="M290 230 H360" />
   <rect x="382" y="176" width="216" height="108" rx="8" class="node node-b" />
   <text x="410" y="218" class="label">Remote run</text>
+  <text x="410" y="242" class="body">plan, review, apply</text>
   <path class="arrow" d="M618 230 H688" />
   <rect x="710" y="176" width="196" height="108" rx="8" class="node node-c" />
-  <text x="738" y="218" class="label">Shared state</text>
+  <text x="738" y="218" class="label">Managed state</text>
+  <text x="738" y="242" class="body">workspace history</text>
   <rect x="54" y="312" width="852" height="112" rx="8" class="note" />
   <text x="72" y="336" class="meta">REVIEW NOTE</text>
-  <text x="72" y="352" class="body">Move review, runs, and state into a team workflow.</text>
-  <text x="72" y="394" class="body">Outcome: Describe remote runs, state storage, and collaboration in HCP Terraform.</text>
+  <text x="72" y="352" class="body">terraform login stores a local token; credentials never belong in the configuration.</text>
+  <text x="72" y="394" class="body">The default lab remains local; cloud.tf.example activates the optional integration.</text>
   <rect x="54" y="438" width="852" height="24" rx="6" class="band" />
-  <text x="72" y="455" class="small">Read left to right: inputs and intent become Terraform behavior, then a reviewed Azure-ready outcome.</text>
+  <text x="72" y="455" class="small">Remote execution moves run infrastructure and state custody away from the operator workstation.</text>
 </svg>

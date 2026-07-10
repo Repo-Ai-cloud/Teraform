@@ -1,62 +1,64 @@
 # Lesson 04: Terraform Project Anatomy and CLI Workflow
 
-## Objectives
-- Read a Terraform project as a set of inputs, resources, outputs, and commands.
-- Connect the lesson to Terraform Associate 004 objective area: Workflow.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+This lesson treats each CLI command as a distinct review checkpoint rather than one opaque deployment action.
+
+## Certification alignment
+
+- `3a` — Describe the Terraform workflow — **hands-on**: The local terraform_data project is used to run fmt, init, validate, plan, and optional apply in their normal order.
+- `3b` — Initialize a Terraform working directory — **hands-on**: The local terraform_data project is used to run fmt, init, validate, plan, and optional apply in their normal order.
+- `3c` — Validate a Terraform configuration — **hands-on**: The local terraform_data project is used to run fmt, init, validate, plan, and optional apply in their normal order.
+- `3d` — Generate and review an execution plan for Terraform — **hands-on**: The local terraform_data project is used to run fmt, init, validate, plan, and optional apply in their normal order.
+- `3g` — Apply formatting and style adjustments to a configuration — **hands-on**: The local terraform_data project is used to run fmt, init, validate, plan, and optional apply in their normal order.
 
 ## Scenario
+
 A service-status page project is being split into predictable files for review.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Read the files by responsibility: versions, variables, main configuration, and outputs.
+2. Intentionally add harmless spacing in a disposable copy, run terraform fmt -check, then terraform fmt and inspect the diff.
+3. Run the baseline commands and save a plan in the disposable copy for terraform show.
+4. Optionally apply the terraform_data contract and verify a subsequent plan reports no changes.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- Initialization prepares the working directory without creating infrastructure.
+- Validation succeeds only after syntax and internal references are valid.
+- The displayed plan separates proposed actions from configuration source and state.
+
+## Failure modes
+
+- Running plan before init can fail when dependencies or backend setup are unavailable.
+- terraform validate cannot prove a remote API will accept a future request.
+- Formatting can change style but cannot repair invalid business logic.
 
 ## Wiki
+
 ![Lesson 04 visual](assets/lesson-04-visual.svg)
 ![Lesson 04 diagram](assets/lesson-04-diagram.svg)
 
-**Concept snapshot:** Read a Terraform project as a set of inputs, resources, outputs, and commands.
-
-**Key terms:** `Workflow`, `model`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If the local contract was applied, destroy it before removing its disposable state.
+- Delete the disposable formatted copy and saved plan; keep tracked source and lock files.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What work belongs to init that validate does not perform?
+2. Why inspect a saved plan with terraform show before apply?
+3. Which command should CI use to check formatting without rewriting files?
 

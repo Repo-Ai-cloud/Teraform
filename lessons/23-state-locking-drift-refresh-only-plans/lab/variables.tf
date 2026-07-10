@@ -31,3 +31,14 @@ variable "workload_name" {
   type        = string
   default     = "status"
 }
+
+variable "drift_message" {
+  description = "Content Terraform expects in the local drift target."
+  type        = string
+  default     = "managed by Terraform - lesson 23"
+
+  validation {
+    condition     = length(trimspace(var.drift_message)) > 0
+    error_message = "The drift message must not be empty."
+  }
+}

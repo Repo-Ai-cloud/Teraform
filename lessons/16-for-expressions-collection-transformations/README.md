@@ -1,62 +1,61 @@
 # Lesson 16: For Expressions and Collection Transformations
 
-## Objectives
-- Transform maps and lists into deployable naming and tag structures.
-- Connect the lesson to Terraform Associate 004 objective area: Configuration.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Expressions transform values; they do not create nested resource blocks by themselves.
+
+## Certification alignment
+
+- `4d` — Understand and use complex types — **hands-on**: For expressions transform maps and lists into normalized names, filtered subsets, and grouped output values.
+- `4e` — Write dynamic configuration using expressions and functions — **hands-on**: For expressions transform maps and lists into normalized names, filtered subsets, and grouped output values.
 
 ## Scenario
+
 A portfolio dashboard needs stable labels generated from team ownership data.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Read each for expression and state its input collection, output type, and optional filter.
+2. Use terraform console to evaluate the expressions with one added and one removed element.
+3. Change capitalization or spacing and observe the normalization functions inside the transformation.
+4. Compare a transformed map with a transformed list and explain how keys affect downstream identity.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- Outputs show predictable normalized collections derived from the inputs.
+- A filtered expression includes only elements whose condition evaluates true.
+- Map-producing expressions retain explicit keys suitable for later for_each use.
+
+## Failure modes
+
+- Duplicate generated keys can make a map expression fail unless grouping is intentional.
+- A filter placed after the result expression still evaluates according to Terraform's for syntax, not shell syntax.
+- Transforming to a list too early can discard stable keys needed downstream.
 
 ## Wiki
+
 ![Lesson 16 visual](assets/lesson-16-visual.svg)
 ![Lesson 16 diagram](assets/lesson-16-diagram.svg)
 
-**Concept snapshot:** Transform maps and lists into deployable naming and tag structures.
-
-**Key terms:** `Configuration`, `collections`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Destroy the local terraform_data instance if applied.
+- Remove console transcripts or disposable inputs that include organization-specific names.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What type does each expression return?
+2. Where would an if clause reduce the collection?
+3. How can a for expression prepare data for for_each?
 

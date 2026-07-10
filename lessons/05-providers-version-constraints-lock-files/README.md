@@ -1,62 +1,63 @@
 # Lesson 05: Providers, Version Constraints, and Lock Files
 
-## Objectives
-- Pin provider versions and understand the lock file created by init.
-- Connect the lesson to Terraform Associate 004 objective area: Fundamentals.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Provider upgrades are deliberate repository changes, never routine cleanup.
+
+## Certification alignment
+
+- `2a` — Install and version Terraform providers — **hands-on**: The constrained hashicorp/random provider and random_pet resource create real provider-installation evidence, including lock inspection and an intentional upgrade rehearsal.
+- `2b` — Describe how Terraform uses providers — **hands-on**: The constrained hashicorp/random provider and random_pet resource create real provider-installation evidence, including lock inspection and an intentional upgrade rehearsal.
+- `3b` — Initialize a Terraform working directory — **hands-on**: The constrained hashicorp/random provider and random_pet resource create real provider-installation evidence, including lock inspection and an intentional upgrade rehearsal.
+- `3g` — Apply formatting and style adjustments to a configuration — **hands-on**: The constrained hashicorp/random provider and random_pet resource create real provider-installation evidence, including lock inspection and an intentional upgrade rehearsal.
 
 ## Scenario
+
 The team wants repeatable provider installation across laptops and CI.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Inspect required_providers and identify source, version constraint, and the committed root lock selection.
+2. Run initialization in read-only lock mode and use terraform providers to confirm the dependency graph.
+3. Apply only if you want to observe random_pet.provider_install; no cloud account is required.
+4. Copy the lab to a disposable directory, run terraform init -upgrade there, and compare its lock diff with the committed file before discarding it.
+
+Baseline commands for this lesson:
+
+```powershell
+Set-Location lab
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+## Expected results
+
+- Initialization verifies the committed checksums for the current platform.
+- The plan contains random_pet.provider_install and its output; an apply records the generated pet name in local state.
+- An upgrade changes the disposable lock only when a newer release satisfies the constraint.
+
+## Failure modes
+
+- Deleting the lock can silently change provider selection on the next init.
+- A constraint that excludes the locked release makes read-only initialization fail until an intentional update.
+- Running init -upgrade in the tracked lesson can create an unreviewed lock diff.
 
 ## Wiki
+
 ![Lesson 05 visual](assets/lesson-05-visual.svg)
 ![Lesson 05 diagram](assets/lesson-05-diagram.svg)
 
-**Concept snapshot:** Pin provider versions and understand the lock file created by init.
-
-**Key terms:** `Fundamentals`, `model`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab is intentionally local-first so you can practice Terraform language behavior without creating cloud resources.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- Destroy the local random_pet instance if it was applied.
+- Delete the disposable upgrade directory; do not copy its lock back unless intentionally adopting and testing that upgrade.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. What different promises are made by a version constraint and a dependency lock?
+2. Why rehearse init -upgrade in a disposable copy?
+3. Which lock-file changes require reviewer attention?
 

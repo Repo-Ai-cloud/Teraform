@@ -1,0 +1,19 @@
+# Optional no-cost CLI-driven HCP Terraform workflow.
+# 1. Run: terraform login app.terraform.io
+# 2. Replace the organization and workspace placeholders.
+# 3. Rename this file to cloud.tf in a disposable copy of the lab.
+# 4. Run: terraform init, terraform plan, and terraform apply.
+# 5. Inspect the remote run and managed state in HCP Terraform.
+# 6. Run terraform destroy before deleting the training workspace.
+terraform {
+  cloud {
+    organization = "replace-with-your-organization"
+
+    workspaces {
+      name = "atfa-lesson-37"
+    }
+  }
+}
+
+# The API token created by terraform login stays in the Terraform CLI
+# credentials file. Never add a token to this configuration or a tfvars file.

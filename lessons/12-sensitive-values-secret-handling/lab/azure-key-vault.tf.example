@@ -1,0 +1,41 @@
+# Azure Key Vault is an Azure service, not HashiCorp Vault. This optional
+# example reads an existing secret through AzureRM's ephemeral resource. Rename
+# this file to *.tf only in a disposable working copy with an Azure CLI session.
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.80"
+    }
+  }
+}
+
+variable "azure_subscription_id" {
+  type        = string
+  description = "Subscription containing the training Key Vault."
+}
+
+variable "azure_key_vault_id" {
+  type        = string
+  description = "Resource ID of an existing non-production Azure Key Vault."
+}
+
+variable "azure_key_vault_secret_name" {
+  type        = string
+  description = "Name of the existing throwaway secret to retrieve."
+}
+
+provider "azurerm" {
+  features {}
+
+  subscription_id                 = var.azure_subscription_id
+  resource_provider_registrations = "none"
+}
+
+ephemeral "azurerm_key_vault_secret" "runtime" {
+  name         = var.azure_key_vault_secret_name
+  key_vault_id = var.azure_key_vault_id
+}
+
+# Only pass ephemeral.azurerm_key_vault_secret.runtime.value into another
+# ephemeral context, provider configuration, or a provider write-only argument.

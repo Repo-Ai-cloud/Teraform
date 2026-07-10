@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 07 diagram: Resources, Data Sources, and References</title>
-  <desc id="desc">A lesson-specific Terraform and Azure flow diagram.</desc>
+  <desc id="desc">A managed Azure resource and a read-only Azure client data source expose attributes that Terraform references in outputs and dependent configuration.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }
@@ -27,22 +27,22 @@
   <rect class="teal" y="24" width="960" height="8" />
   <text x="54" y="72" class="meta">LESSON 07 DIAGRAM</text>
   <text x="54" y="108" class="title">Resources, Data Sources, and References</text>
-  <text x="54" y="136" class="meta">Area: Configuration   |   Lab type: resource group</text>
+  <text x="54" y="136" class="meta">Objective: 4a, 4b   |   Lab type: resource and data source</text>
   <rect x="54" y="176" width="216" height="108" rx="8" class="node node-a" />
-  <text x="82" y="218" class="label">Inputs</text>
+  <text x="82" y="218" class="label">Managed resource</text>
+  <text x="82" y="242" class="body">creates or changes Azure</text>
   <path class="arrow" d="M290 230 H360" />
   <rect x="382" y="176" width="216" height="108" rx="8" class="node node-b" />
-  <text x="410" y="218" class="label">azurerm resource</text>
-  <text x="410" y="242" class="label">group</text>
+  <text x="410" y="218" class="label">Read-only data</text>
+  <text x="410" y="242" class="body">queries client context</text>
   <path class="arrow" d="M618 230 H688" />
   <rect x="710" y="176" width="196" height="108" rx="8" class="node node-c" />
-  <text x="738" y="218" class="label">Tagged Azure</text>
-  <text x="738" y="242" class="label">scope</text>
+  <text x="738" y="218" class="label">References</text>
+  <text x="738" y="242" class="body">connect attributes</text>
   <rect x="54" y="312" width="852" height="112" rx="8" class="note" />
   <text x="72" y="336" class="meta">REVIEW NOTE</text>
-  <text x="72" y="352" class="body">Names and tags carry environment context into Azure.</text>
-  <text x="72" y="394" class="body">Outcome: Differentiate managed resources from read-only data sources and connect</text>
-  <text x="72" y="415" class="body">them with references.</text>
+  <text x="72" y="352" class="body">A resource participates in lifecycle; a data source only reads external information.</text>
+  <text x="72" y="394" class="body">References create data flow and usually imply dependency ordering.</text>
   <rect x="54" y="438" width="852" height="24" rx="6" class="band" />
-  <text x="72" y="455" class="small">Read left to right: inputs and intent become Terraform behavior, then a reviewed Azure-ready outcome.</text>
+  <text x="72" y="455" class="small">Read values through named addresses; do not duplicate provider-returned identifiers by hand.</text>
 </svg>

@@ -32,17 +32,48 @@ variable "workload_name" {
   default     = "status"
 }
 
+variable "subscription_id" {
+  description = "Azure subscription ID used by the AzureRM provider. Replace the placeholder before apply."
+  type        = string
+  default     = "00000000-0000-0000-0000-000000000000"
+
+  validation {
+    condition     = can(regex("^[0-9a-fA-F-]{36}$", var.subscription_id))
+    error_message = "Use a subscription ID in GUID format."
+  }
+}
 
 variable "allowed_ingress_rules" {
-  description = "Optional rule records used to model nested configuration."
+  description = "Rules rendered as nested security_rule blocks in the Azure NSG. Use an empty list to create an NSG without inbound allows."
   type = list(object({
-    name = string
-    port = number
+    name                  = string
+    priority              = number
+    port                  = number
+    protocol              = string
+    source_address_prefix = string
+    description           = optional(string, "Managed by Terraform")
   }))
   default = [
     {
-      name = "https"
-      port = 443
+      name                  = "https"
+      priority              = 100
+      port                  = 443
+      protocol              = "Tcp"
+      source_address_prefix = "Internet"
+      description           = "Allow HTTPS for the training workload"
     }
   ]
+
+  validation {
+    condition = alltrue([
+      for rule in var.allowed_ingress_rules :
+      rule.priority >= 100 && rule.priority <= 4096 && rule.port >= 1 && rule.port <= 65535
+    ])
+    error_message = "Each rule priority must be 100-4096 and each port must be 1-65535."
+  }
+
+  validation {
+    condition     = length(distinct([for rule in var.allowed_ingress_rules : rule.priority])) == length(var.allowed_ingress_rules)
+    error_message = "Each NSG rule must use a unique priority."
+  }
 }

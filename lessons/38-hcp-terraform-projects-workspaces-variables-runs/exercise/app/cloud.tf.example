@@ -1,0 +1,9 @@
+terraform {
+  cloud {
+    organization = "replace-with-your-organization"
+
+    workspaces {
+      name = "atfa-lesson-38-app"
+    }
+  }
+}

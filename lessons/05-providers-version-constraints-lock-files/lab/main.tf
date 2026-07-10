@@ -18,6 +18,15 @@ locals {
 
 }
 
+# This logical provider does not need cloud credentials. Its installation is
+# controlled by required_providers in versions.tf and recorded in the lock file
+# when terraform init runs.
+resource "random_pet" "provider_install" {
+  length    = 2
+  separator = "-"
+  prefix    = "${local.normalized_prefix}-${local.environment}"
+}
+
 resource "terraform_data" "lesson_contract" {
   input = {
     lesson_number = "05"
@@ -27,7 +36,11 @@ resource "terraform_data" "lesson_contract" {
     location      = var.location
     workload      = local.workload_name
     scenario      = "The team wants repeatable provider installation across laptops and CI."
-    tags          = local.common_tags
+    provider = {
+      source        = "registry.terraform.io/hashicorp/random"
+      generated_pet = random_pet.provider_install.id
+    }
+    tags = local.common_tags
   }
 }
 

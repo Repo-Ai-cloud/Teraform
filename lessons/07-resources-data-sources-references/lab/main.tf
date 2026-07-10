@@ -13,12 +13,18 @@ locals {
   }
 }
 
+# A data source reads identity metadata that already exists in Azure. The
+# resource below then references those values, forming an implicit dependency.
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_resource_group" "main" {
   name     = "${var.project_prefix}-${var.environment}-${var.workload_name}-07-rg"
   location = var.location
 
   tags = merge(local.common_tags, {
-    scenario = "A reporting dashboard needs to place resources i"
+    scenario        = "A reporting dashboard needs resources tied to the active Azure context."
+    subscription_id = data.azurerm_client_config.current.subscription_id
+    tenant_id       = data.azurerm_client_config.current.tenant_id
   })
 }
 

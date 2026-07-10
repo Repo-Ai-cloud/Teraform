@@ -1,0 +1,14 @@
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.9"
+    }
+  }
+}
+
+# Random is credential-free but still installs as an external provider, making
+# it a safe way to observe plugin_cache_dir behavior.
+resource "random_pet" "cache_probe" {
+  length = 2
+}

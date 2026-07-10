@@ -1,62 +1,65 @@
 # Lesson 14: Outputs and State Visibility
 
-## Objectives
-- Expose useful values while understanding what lands in state.
-- Connect the lesson to Terraform Associate 004 objective area: Configuration.
-- Practice the habit of planning, reviewing, applying only when intentional, and cleaning up.
+Outputs are an explicit interface, not a substitute for securing backend state.
+
+## Certification alignment
+
+- `2d` — Explain how Terraform uses and manages state — **guided**: Outputs publish selected resource attributes while the guided state inspection shows that output sensitivity and state visibility are separate concerns.
+- `4c` — Use variables and outputs — **hands-on**: Outputs publish selected resource attributes while the guided state inspection shows that output sensitivity and state visibility are separate concerns.
 
 ## Scenario
+
 An operations handoff needs resource names, locations, and support metadata after apply.
 
 ## Walkthrough
-Terraform is most useful when a team can explain both the desired infrastructure and the workflow around it. In this lesson, read the lab files in order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`. Notice how names, tags, inputs, and outputs stay explicit so another engineer can review the change before it reaches Azure.
 
-The examples are deliberately small. They are designed to teach the Terraform concept first, then connect that concept to a realistic Azure operating pattern.
+1. Review every output description and trace it to a variable, local, or resource attribute.
+2. Plan and identify which output values are known before apply and which remain unknown until provider response.
+3. If applied, run terraform output and terraform output -json, then inspect state only in the secured local lab.
+4. Classify each candidate value as useful interface data, noisy implementation detail, or sensitive data.
+
+Baseline commands for this lesson:
+
+```powershell
+az account show
+Set-Location lab
+Copy-Item terraform.tfvars.example terraform.tfvars
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+The plan is credentialed but non-mutating. Apply only in a disposable subscription after confirming the active tenant, subscription, names, region, cost, and every proposed replacement or deletion.
+
+## Expected results
+
+- The plan or apply exposes named outputs with clear descriptions.
+- Provider-generated IDs become known after apply and are stored with the resource state.
+- JSON output is machine-readable but still requires sensitive-data handling.
+
+## Failure modes
+
+- Publishing every resource attribute creates a brittle and overly broad interface.
+- Marking an output sensitive only redacts normal display; its backing value can remain in state.
+- Sharing terraform output -json without review can disclose values hidden in the human display.
 
 ## Wiki
+
 ![Lesson 14 visual](assets/lesson-14-visual.svg)
 ![Lesson 14 diagram](assets/lesson-14-diagram.svg)
 
-**Concept snapshot:** Expose useful values while understanding what lands in state.
-
-**Key terms:** `Configuration`, `resource group`, `plan review`, `cleanup`
-
-**Review cues:**
-- Read the lab in this order: `versions.tf`, `providers.tf` when present, `variables.tf`, `main.tf`, and `outputs.tf`.
-- Run `terraform fmt`, `terraform validate`, and `terraform plan` before any intentional apply.
-- Use the visuals to connect the lesson concept to Azure review habits.
-
-**Environment colors:** `dev` blue, `test` amber, `stage` violet, `prod` green.
-
-## Lab Steps
-1. Open the `lab/` folder and review the Terraform files.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` if you want to override defaults.
-3. Run `terraform init`, `terraform fmt`, `terraform validate`, and `terraform plan` from the `lab/` folder.
-4. Apply only in a disposable Azure subscription or a safe local-only lab context.
-
-This lab validates locally and can be applied only after you review subscription-specific values.
-
-## Azure Design Notes
-- Well-Architected lens: name the reliability, security, cost, operational, and performance consideration before applying the lab.
-- Cloud Adoption Framework discipline: keep stable identifiers in names and place ownership, cost, environment, region, and classification details in tags or metadata.
-- Terraform discipline: treat the plan as the review artifact and state as sensitive operational data.
-- Presenter cue: explain why the lab uses this Azure pattern and what would change for production.
-
-## Quality Review
-- Show the expected plan shape before running `terraform apply`.
-- Identify one tradeoff and one failure mode a real team would discuss.
-- Confirm cleanup and post-lab verification before leaving the lesson.
-- Extension challenge: add one guardrail, output, validation rule, or module boundary without changing the lesson objective.
-
 ## Cleanup
-- If you ran `terraform apply`, run `terraform destroy` from this lesson's `lab/` folder.
-- Remove local Terraform working files with `Remove-Item -Recurse -Force .terraform` and delete `.terraform.lock.hcl` only if you do not want to keep provider selections for later.
-- Do not commit real `terraform.tfvars`, state files, plan files, credentials, or generated secrets.
 
-## Check Questions
-1. Which Terraform Associate objective does this lesson reinforce?
-2. Which values belong in variables, locals, and outputs in this example?
-3. What would you review in the plan before allowing this change into a shared Azure environment?
+- If applied, destroy the Azure resource group before deleting local state.
+- Do not paste state or JSON output into tickets; delete disposable exports after review.
+- Remove generated `.terraform/`, plan files, state files, debug logs, copied `terraform.tfvars`, and generated secrets only after any required destroy or migration is complete.
+- If this root has a committed `.terraform.lock.hcl`, keep it. Never delete a root lock file as routine cleanup; update it only during an intentional, reviewed dependency upgrade.
+- Do not commit credentials, real secret values, state, plan files, backend credentials, or local variable files.
 
+## Check questions
 
+1. Which output is a stable interface versus an implementation detail?
+2. Why can an output be unknown during plan?
+3. What security control is still needed for a sensitive output?
 
