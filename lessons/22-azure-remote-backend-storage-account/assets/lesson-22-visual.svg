@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 22 visual: Azure Remote Backend with Storage Account</title>
-  <desc id="desc">Overview for Lesson 22 visual: Azure Remote Backend with Storage Account, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">State lesson card identifies an Azure backend lab whose outcome is preparing remote Storage state without committed secrets, while retaining deliberate plan, migration, and cleanup checkpoints.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

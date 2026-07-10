@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 25 diagram: Workspaces and Environment Separation</title>
-  <desc id="desc">Process diagram for Lesson 25 diagram: Workspaces and Environment Separation, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
+  <desc id="desc">A selected Terraform workspace determines the environment label and corresponding separated state, making the relationship between workspace identity, naming, and state location visible.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

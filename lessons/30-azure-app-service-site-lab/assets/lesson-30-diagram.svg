@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 30 diagram: Azure App Service Site Lab</title>
-  <desc id="desc">Process diagram for Lesson 30 diagram: Azure App Service Site Lab, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
+  <desc id="desc">An Azure resource group contains an App Service plan, which hosts a Linux web app with a managed identity; the arrows expose the deployment dependency chain.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

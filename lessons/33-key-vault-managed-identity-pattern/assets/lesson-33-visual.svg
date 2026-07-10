@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 33 visual: Key Vault and Managed Identity Pattern</title>
-  <desc id="desc">Overview for Lesson 33 visual: Key Vault and Managed Identity Pattern, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Key Vault card connects managed identity, RBAC-friendly configuration, and secret access as an Azure lab pattern that avoids credential material in source and state where possible.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

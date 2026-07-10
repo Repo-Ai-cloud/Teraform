@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 36 diagram: Debugging, Logs, CLI Config, and Provider Cache</title>
-  <desc id="desc">Process diagram for Lesson 36 diagram: Debugging, Logs, CLI Config, and Provider Cache, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
+  <desc id="desc">Terraform CLI configuration and diagnostic logs connect to the provider cache and then a troubleshooting loop, showing where evidence is collected, redacted, and cleaned up.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

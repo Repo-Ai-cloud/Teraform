@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 26 visual: Local Modules and Variable Scope</title>
-  <desc id="desc">Overview for Lesson 26 visual: Local Modules and Variable Scope, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Modules card identifies a local naming-module lab and highlights passing only declared inputs and consuming explicit outputs before reviewing the composed plan.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

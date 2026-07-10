@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 22 diagram: Azure Remote Backend with Storage Account</title>
-  <desc id="desc">Process diagram for Lesson 22 diagram: Azure Remote Backend with Storage Account, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
+  <desc id="desc">Backend configuration points Terraform to an Azure Storage container that holds shared state, illustrating the migration from local files to an Entra-authenticated remote backend.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

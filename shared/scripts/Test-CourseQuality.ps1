@@ -50,6 +50,70 @@ function Assert-NoMatches {
   }
 }
 
+function Assert-SvgAccessibility {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Path
+  )
+
+  $settings = [System.Xml.XmlReaderSettings]::new()
+  $settings.DtdProcessing = [System.Xml.DtdProcessing]::Prohibit
+  $settings.XmlResolver = $null
+  $reader = $null
+
+  try {
+    $reader = [System.Xml.XmlReader]::Create($Path, $settings)
+    $document = [System.Xml.XmlDocument]::new()
+    $document.XmlResolver = $null
+    $document.Load($reader)
+  }
+  catch {
+    throw "Invalid SVG XML in $($Path): $($_.Exception.Message)"
+  }
+  finally {
+    if ($reader) {
+      $reader.Dispose()
+    }
+  }
+
+  if ($document.DocumentElement.LocalName -ne "svg") {
+    throw "SVG asset does not have an svg document element: $Path"
+  }
+
+  $titleNodes = @($document.SelectNodes("/*[local-name()='svg']/*[local-name()='title']"))
+  $descriptionNodes = @($document.SelectNodes("/*[local-name()='svg']/*[local-name()='desc']"))
+  Assert-Equal "SVG title count in $Path" $titleNodes.Count 1
+  Assert-Equal "SVG description count in $Path" $descriptionNodes.Count 1
+
+  $description = ($descriptionNodes[0].InnerText -replace '\s+', ' ').Trim()
+  if ($description.Length -lt 80) {
+    throw "SVG description is too short to explain the visible content and relationships: $Path"
+  }
+
+  foreach ($genericPattern in @(
+    '^(?:Overview|Process diagram) for Lesson \d+',
+    'summarizing the certification focus',
+    'showing the lesson-specific Terraform behavior',
+    'resulting local, Azure, or HCP outcome',
+    'lesson-specific Terraform behavior'
+  )) {
+    if ($description -match $genericPattern) {
+      throw "SVG description uses generic boilerplate '$genericPattern': $Path"
+    }
+  }
+
+  if ($document.DocumentElement.GetAttribute("role") -ne "img") {
+    throw "SVG asset must declare role='img': $Path"
+  }
+
+  $ariaLabels = @($document.DocumentElement.GetAttribute("aria-labelledby") -split '\s+' | Where-Object { $_ })
+  foreach ($requiredLabel in @($titleNodes[0].GetAttribute("id"), $descriptionNodes[0].GetAttribute("id"))) {
+    if ([string]::IsNullOrWhiteSpace($requiredLabel) -or $requiredLabel -notin $ariaLabels) {
+      throw "SVG aria-labelledby must reference both the title and description IDs: $Path"
+    }
+  }
+}
+
 $expectedObjectives = [ordered]@{
   "1a" = "Explain what IaC is"
   "1b" = "Describe the advantages of IaC patterns"
@@ -180,12 +244,14 @@ foreach ($lesson in $lessons) {
     }
   }
   foreach ($asset in @("assets/lesson-$lessonNumber-visual.svg", "assets/lesson-$lessonNumber-diagram.svg")) {
-    if (-not (Test-Path -LiteralPath (Join-Path $lesson.FullName $asset) -PathType Leaf)) {
+    $assetPath = Join-Path $lesson.FullName $asset
+    if (-not (Test-Path -LiteralPath $assetPath -PathType Leaf)) {
       throw "Missing lesson asset '$asset' in $($lesson.Name)"
     }
     if ($content -notmatch [regex]::Escape($asset)) {
       throw "README does not reference '$asset' in $($lesson.Name)"
     }
+    Assert-SvgAccessibility -Path $assetPath
   }
 
   $mapBlock = @($lessonMapBlocks | Where-Object { [int]$_.Groups["number"].Value -eq [int]$lessonNumber })

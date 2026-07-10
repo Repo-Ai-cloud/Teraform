@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 31 visual: Azure Storage Static Assets Lab with New Site Content</title>
-  <desc id="desc">Overview for Lesson 31 visual: Azure Storage Static Assets Lab with New Site Content, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Static-site lab card focuses on hosting a small set of new assets from Azure Storage, with the site content and endpoint inspected before apply, verification, and teardown.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

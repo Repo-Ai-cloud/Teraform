@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 29 visual: Private Module Registry Concepts</title>
-  <desc id="desc">Overview for Lesson 29 visual: Private Module Registry Concepts, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Private-registry card places module publishing, version indexing, authenticated consumption, and source naming in a guided model workflow with review gates before adoption.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

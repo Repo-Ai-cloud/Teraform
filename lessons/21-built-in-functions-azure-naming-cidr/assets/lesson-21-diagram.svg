@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 21 diagram: Built-in Functions for Azure Naming and CIDR Work</title>
-  <desc id="desc">Process diagram for Lesson 21 diagram: Built-in Functions for Azure Naming and CIDR Work, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
+  <desc id="desc">Raw names, regions, and network values pass through Terraform functions to become Azure-safe names, CIDR ranges, and lookup results ready for review.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

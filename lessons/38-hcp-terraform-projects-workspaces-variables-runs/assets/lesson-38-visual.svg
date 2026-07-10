@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 38 visual: HCP Terraform Projects, Workspaces, Variables, and Runs</title>
-  <desc id="desc">Overview for Lesson 38 visual: HCP Terraform Projects, Workspaces, Variables, and Runs, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Hosted-workflow card organizes projects, workspaces, shared variables, remote state, and run triggers into a team-delivery model with review gates between upstream and downstream runs.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

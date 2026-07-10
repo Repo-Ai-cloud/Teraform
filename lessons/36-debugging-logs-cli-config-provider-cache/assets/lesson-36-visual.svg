@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 36 visual: Debugging, Logs, CLI Config, and Provider Cache</title>
-  <desc id="desc">Overview for Lesson 36 visual: Debugging, Logs, CLI Config, and Provider Cache, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Debugging card groups TF_LOG, CLI configuration, and provider caching into a focused maintenance workflow, emphasizing inspection, redaction, environment restoration, and artifact removal.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 470">
   <title id="title">Lesson 26 diagram: Local Modules and Variable Scope</title>
-  <desc id="desc">Process diagram for Lesson 26 diagram: Local Modules and Variable Scope, showing the lesson-specific Terraform behavior, review boundary, and resulting local, Azure, or HCP outcome.</desc>
+  <desc id="desc">The root module sends a limited set of inputs into a local naming module and receives a reusable output, showing the explicit variable and output boundary between modules.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .band { fill: #0f172a; }

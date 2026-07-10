@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 34 visual: Log Analytics and Monitoring Outputs</title>
-  <desc id="desc">Overview for Lesson 34 visual: Log Analytics and Monitoring Outputs, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">Monitoring lab card centers creation of a Log Analytics workspace and exposure of its identifiers, with observability values inspected across plan, apply, verification, and cleanup.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }

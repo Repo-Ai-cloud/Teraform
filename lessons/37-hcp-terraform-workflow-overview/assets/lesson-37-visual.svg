@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 960 540">
   <title id="title">Lesson 37 visual: HCP Terraform Workflow Overview</title>
-  <desc id="desc">Overview for Lesson 37 visual: HCP Terraform Workflow Overview, summarizing the certification focus, learner scenario, lab type, intended outcome, and environment color legend.</desc>
+  <desc id="desc">HCP Terraform card introduces remote runs, managed state, and collaboration, mapping the familiar plan-and-apply review rhythm onto an optional hosted workspace workflow.</desc>
   <style>
     .bg { fill: #f8fafc; }
     .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
